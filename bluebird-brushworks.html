@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blue Bird Brushworks — Watercolor Card Company</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:      #F7F2E8;
+  --parchment:  #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate:      #3D5A72;
+  --deep-slate: #2B3F52;
+  --sage:       #8FA68B;
+  --soft-sage:  #B8CBBA;
+  --warm-tan:   #C4A882;
+  --muted:      #7A8591;
+  --ink:        #2C3E50;
+}
+
+html { scroll-behavior: smooth; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* Visible focus outline for keyboard users */
+a:focus-visible, button:focus-visible,
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--dusty-blue);
+  outline-offset: 2px;
+}
+
+/* Screen-reader-only utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--cream);
+  border-bottom: 1px solid rgba(196,168,130,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem; height: 58px;
+}
+
+.nav-left, .nav-right {
+  display: flex; gap: 2.4rem; list-style: none; align-items: center;
+}
+
+.nav-left a, .nav-right a {
+  font-size: 0.73rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; font-weight: 400;
+  position: relative; transition: color 0.2s;
+}
+.nav-left a::after, .nav-right a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 1px; background: var(--dusty-blue);
+  transform: scaleX(0); transition: transform 0.2s;
+}
+.nav-left a:hover, .nav-right a:hover { color: var(--slate); }
+.nav-left a:hover::after, .nav-right a:hover::after { transform: scaleX(1); }
+
+.nav-center {
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.92rem; letter-spacing: 0.12em;
+  color: var(--slate); text-decoration: none;
+  white-space: nowrap;
+}
+
+.cart-btn {
+  background: none; border: 1.5px solid var(--soft-sage);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-size: 0.73rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--slate); cursor: pointer; font-family: 'Lato', sans-serif;
+  transition: border-color 0.2s, background 0.2s;
+}
+.cart-btn:hover { border-color: var(--dusty-blue); background: rgba(122,154,181,0.07); }
+
+/* ── HERO ── */
+.hero {
+  min-height: calc(100vh - 58px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem 4rem;
+  position: relative; overflow: hidden;
+  background: url('flowerBackground.webp') center center / cover no-repeat;
+}
+
+/* Light overlay — reduced so flower shows through more */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: rgba(247,242,232,0.25);
+}
+
+/* Decorative botanical border sprigs — top corners */
+.sprig { position: absolute; pointer-events: none; }
+.sprig-tl { top: 1.5rem; left: 1.5rem; transform: rotate(0deg); }
+.sprig-tr { top: 1.5rem; right: 1.5rem; transform: scaleX(-1); }
+.sprig-bl { bottom: 5rem; left: 1.5rem; transform: rotate(180deg) scaleX(-1); }
+.sprig-br { bottom: 5rem; right: 1.5rem; transform: rotate(180deg); }
+
+.hero-logo-wrap {
+  position: relative; z-index: 1;
+  margin-bottom: 1.6rem;
+}
+
+/* The big central logo image — circle framed */
+.logo-illustration {
+  width: min(240px, 60vw);
+  height: min(240px, 60vw);
+  max-width: 100%;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid white;
+  box-shadow: 0 4px 20px rgba(44,63,80,0.18);
+}
+
+/* White frosted card behind hero text */
+.hero-text-card {
+  position: relative; z-index: 1;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 20px;
+  padding: 2rem 2.5rem 2.2rem;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 4px 24px rgba(44,63,80,0.1);
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+}
+
+.hero-brand {
+  position: relative; z-index: 1;
+  margin-bottom: 0.5rem;
+}
+.hero-brand-main {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  color: var(--deep-slate); font-weight: 400;
+  letter-spacing: 0.06em; line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.hero-brand-sub {
+  font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--dusty-blue); font-weight: 400;
+}
+
+.hero-tagline {
+  position: relative; z-index: 1;
+  font-family: 'IM Fell English', serif;
+  font-style: italic; font-size: 1.1rem;
+  color: var(--muted); margin-bottom: 2.4rem; letter-spacing: 0.02em;
+}
+
+/* Small decorative divider line with leaf */
+.hero-divider {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 0.9rem;
+  justify-content: center; margin-bottom: 2.4rem; color: var(--soft-sage);
+}
+.hero-divider::before, .hero-divider::after {
+  content: ''; display: block; width: 80px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--soft-sage));
+}
+.hero-divider::before { background: linear-gradient(to left, transparent, var(--soft-sage)); }
+
+.hero-cta-row {
+  position: relative; z-index: 1;
+  display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--dusty-blue); color: white;
+  border: none; border-radius: 28px;
+  padding: 0.8rem 2rem; font-size: 0.78rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Lato', sans-serif; font-weight: 400;
+  text-decoration: none; display: inline-block;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: var(--slate); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent; color: var(--slate);
+  border: 1.5px solid var(--warm-tan);
+  border-radius: 28px; padding: 0.8rem 2rem;
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Lato', sans-serif; font-weight: 400;
+  text-decoration: none; display: inline-block;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: var(--dusty-blue); color: var(--dusty-blue); background: rgba(122,154,181,0.05); }
+
+/* ── PAGE SECTIONS (hidden by default) ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── SHOP ALL ── */
+.shop-section {
+  max-width: 1100px; margin: 0 auto;
+  padding: 4rem 2rem;
+}
+.page-header { text-align: center; margin-bottom: 3rem; }
+.page-eyebrow {
+  font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--dusty-blue); margin-bottom: 0.6rem; font-weight: 400;
+}
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 400; color: var(--deep-slate);
+  margin-bottom: 0.7rem;
+}
+.page-sub {
+  font-family: 'IM Fell English', serif;
+  font-style: italic; font-size: 1.05rem; color: var(--muted);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.8rem;
+}
+.card {
+  background: white; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44,63,80,0.07);
+  border: 1px solid rgba(196,168,130,0.18);
+  transition: transform 0.22s, box-shadow 0.22s; cursor: pointer;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(44,63,80,0.11); }
+.card-img {
+  width: 100%; aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.card-badge {
+  position: absolute; top: 0.7rem; right: 0.7rem;
+  background: rgba(247,242,232,0.93); border-radius: 16px;
+  padding: 0.2rem 0.6rem; font-size: 0.67rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--slate);
+}
+.card-body { padding: 1.1rem 1.3rem 1.3rem; }
+.card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; color: var(--deep-slate); margin-bottom: 0.2rem; font-weight: 400;
+}
+.card-desc {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.9rem; color: var(--muted); margin-bottom: 0.9rem;
+}
+.card-footer { display: flex; align-items: center; justify-content: space-between; }
+.card-price { font-size: 1rem; color: var(--slate); font-weight: 700; }
+.add-btn {
+  background: var(--dusty-blue); color: white;
+  border: none; border-radius: 18px;
+  padding: 0.38rem 1rem; font-size: 0.73rem;
+  letter-spacing: 0.08em; cursor: pointer;
+  font-family: 'Lato', sans-serif; font-weight: 400;
+  transition: background 0.2s;
+}
+.add-btn:hover { background: var(--slate); }
+
+/* ── CUSTOM REQUEST FORM ── */
+.custom-section {
+  max-width: 680px; margin: 0 auto; padding: 4rem 2rem;
+}
+.form-card {
+  background: white; border-radius: 14px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 4px 24px rgba(44,63,80,0.08);
+  border: 1px solid rgba(196,168,130,0.2);
+}
+.form-group { margin-bottom: 1.5rem; }
+label {
+  display: block; font-size: 0.75rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 0.5rem; font-weight: 400;
+}
+input[type=text], input[type=email], select, textarea {
+  width: 100%; border: 1.5px solid var(--parchment);
+  border-radius: 8px; padding: 0.75rem 1rem;
+  font-family: 'IM Fell English', serif; font-size: 1rem;
+  color: var(--ink); background: var(--cream);
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--dusty-blue); background: white; }
+textarea { resize: vertical; min-height: 120px; }
+select { cursor: pointer; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.form-hint {
+  font-size: 0.78rem; color: var(--muted);
+  margin-top: 0.35rem;
+  font-family: 'IM Fell English', serif; font-style: italic;
+}
+.submit-btn {
+  width: 100%; padding: 1rem;
+  background: var(--dusty-blue); color: white;
+  border: none; border-radius: 28px;
+  font-family: 'Lato', sans-serif; font-size: 0.82rem;
+  letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+  margin-top: 0.5rem; transition: background 0.2s;
+}
+.submit-btn:hover { background: var(--slate); }
+.form-success {
+  text-align: center; padding: 2rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; color: var(--sage); display: none;
+}
+
+/* ── OUR STORY ── */
+.story-band {
+  background: var(--parchment);
+  padding: 5rem 2rem;
+  border-top: 1px solid rgba(196,168,130,0.25);
+}
+.story-inner {
+  max-width: 1060px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+}
+.story-visual { display: flex; align-items: center; justify-content: center; }
+.palette-svg { width: 100%; max-width: 340px; }
+.about-photo {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(44,63,80,0.15);
+  border: 4px solid white;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+}
+.story-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 400; color: var(--deep-slate);
+  line-height: 1.3; margin-bottom: 1.2rem;
+}
+.story-title em { font-style: italic; color: var(--dusty-blue); }
+.story-body {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.08rem; color: var(--muted);
+  line-height: 1.9; margin-bottom: 1rem;
+}
+.story-body + .btn-primary { margin-top: 0.8rem; }
+
+/* ── CARD BADGE — colour-coded ── */
+.card-badge {
+  position: absolute; top: 0.7rem; right: 0.7rem;
+  border-radius: 16px; padding: 0.22rem 0.65rem;
+  font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 400; font-family: 'Lato', sans-serif;
+}
+.badge-bestseller { background: rgba(122,154,181,0.2); color: var(--slate); }
+.badge-new        { background: rgba(143,166,139,0.24); color: #3d6b40; }
+.badge-popular    { background: rgba(196,168,130,0.24); color: #7a5c30; }
+.badge-holiday    { background: rgba(214,169,138,0.28); color: #7a4a30; }
+.badge-gift-set   { background: rgba(61,90,114,0.13); color: var(--deep-slate); }
+
+@media (max-width: 768px) {
+  .story-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .story-visual { order: -1; }
+  .about-photo { max-width: 260px; }
+  .sprig { width: 70px; height: 70px; }
+  .sprig-bl, .sprig-br { display: none; }
+  nav { padding: 0 1rem; height: 54px; }
+  .nav-left, .nav-right { gap: 1rem; }
+  .nav-left a, .nav-right a { font-size: 0.68rem; letter-spacing: 0.12em; }
+  .nav-center { display: none; }
+  .hero { min-height: calc(100vh - 54px); padding: 2rem 1rem 3rem; }
+  .story-band { padding: 3rem 1.2rem; }
+  .page-title { font-size: 1.8rem; }
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.2rem; }
+}
+
+/* ── CART DRAWER ── */
+.cart-overlay {
+  position: fixed; inset: 0; background: rgba(44,63,80,0.3);
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+.cart-drawer {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 340px;
+  background: var(--cream); padding: 1.8rem;
+  overflow-y: auto; transform: translateX(100%);
+  transition: transform 0.3s; box-shadow: -4px 0 24px rgba(44,63,80,0.1);
+}
+.cart-overlay.open .cart-drawer { transform: translateX(0); }
+.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
+.cart-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--deep-slate); font-weight: 400; }
+.cart-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--muted); }
+.cart-item { display: flex; gap: 0.9rem; padding: 0.9rem 0; border-bottom: 1px solid var(--parchment); }
+.ci-thumb { width: 54px; height: 54px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--parchment); }
+.ci-name { font-family: 'Playfair Display', serif; font-size: 0.88rem; color: var(--deep-slate); }
+.ci-price { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
+.ci-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem; align-self: start; margin-left: auto; }
+.ci-remove:hover { color: #c0392b; }
+.cart-empty { text-align: center; padding: 2.5rem 1rem; font-family: 'IM Fell English', serif; font-style: italic; font-size: 1rem; color: var(--muted); }
+.cart-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: var(--deep-slate); margin: 1.3rem 0 0.7rem; }
+.checkout-btn { width: 100%; padding: 0.9rem; background: var(--dusty-blue); color: white; border: none; border-radius: 24px; font-family: 'Lato', sans-serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+.checkout-btn:hover { background: var(--slate); }
+.cart-count { background: var(--warm-tan); color: white; border-radius: 10px; padding: 0.08rem 0.42rem; font-size: 0.68rem; font-weight: 700; display: none; margin-left: 0.3rem; }
+.cart-count.visible { display: inline; }
+
+/* ── CHECKOUT MODAL ── */
+.checkout-overlay {
+  position: fixed; inset: 0; background: rgba(44,63,80,0.45);
+  z-index: 300; display: none; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.checkout-overlay.open { display: flex; }
+.checkout-modal {
+  background: var(--cream); border-radius: 16px;
+  width: 100%; max-width: 520px; max-height: 90vh;
+  overflow-y: auto; padding: 2rem 2rem 2.2rem;
+  box-shadow: 0 8px 40px rgba(44,63,80,0.18);
+  position: relative;
+}
+.checkout-modal h2 {
+  font-family: 'Playfair Display', serif; font-size: 1.5rem;
+  font-weight: 400; color: var(--deep-slate); margin-bottom: 0.3rem;
+}
+.checkout-modal .modal-sub {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 0.95rem; color: var(--muted); margin-bottom: 1.4rem;
+}
+.checkout-close {
+  position: absolute; top: 1rem; right: 1.2rem;
+  background: none; border: none; font-size: 1.4rem;
+  cursor: pointer; color: var(--muted); line-height: 1;
+}
+.checkout-close:hover { color: var(--ink); }
+.order-summary {
+  background: var(--parchment); border-radius: 10px;
+  padding: 0.9rem 1.1rem; margin-bottom: 1.4rem;
+  font-size: 0.88rem; color: var(--slate);
+}
+.order-summary-title {
+  font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--dusty-blue); margin-bottom: 0.5rem; font-weight: 400;
+}
+.order-line { display: flex; justify-content: space-between; padding: 0.18rem 0; }
+.order-total-line {
+  display: flex; justify-content: space-between;
+  font-weight: 700; border-top: 1px solid rgba(196,168,130,0.35);
+  margin-top: 0.5rem; padding-top: 0.5rem;
+}
+.checkout-section-label {
+  font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--dusty-blue); margin: 1.2rem 0 0.7rem; font-weight: 400;
+}
+.checkout-success {
+  text-align: center; padding: 1.5rem 0.5rem;
+  display: none;
+}
+
+/* ── FOOTER STRIP ── */
+footer {
+  background: var(--parchment);
+  border-top: 1px solid rgba(196,168,130,0.3);
+  text-align: center; padding: 1.8rem;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1rem; }
+  .nav-left { gap: 1.2rem; }
+  .nav-right { gap: 1rem; }
+  .logo-illustration { width: 240px; height: 240px; }
+  .hero-brand-main { font-size: 2.2rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-card { padding: 2rem 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<a href="#main" class="sr-only">Skip to content</a>
+<nav aria-label="Primary">
+  <ul class="nav-left">
+    <li><a href="#" onclick="showPage('home')">Home</a></li>
+    <li><a href="#" onclick="showPage('shop')">Shop All Art</a></li>
+  </ul>
+
+  <div class="nav-center">
+    <a href="#" class="nav-logo-text" onclick="showPage('home')">Blue Bird Brushworks</a>
+  </div>
+
+  <ul class="nav-right">
+    <li><a href="#" onclick="showPage('custom')">Request Custom Art</a></li>
+    <li>
+      <button class="cart-btn" onclick="openCart()" aria-label="Open shopping cart" aria-haspopup="dialog">
+        Cart <span class="cart-count" id="cartCount" aria-hidden="true">0</span>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<!-- ══ HOME PAGE ══ -->
+<main id="main" tabindex="-1"><div id="page-home" class="page active">
+  <section class="hero">
+
+    <!-- Corner botanical sprigs -->
+    <svg aria-hidden="true" focusable="false" class="sprig sprig-tl" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 110 Q40 70 80 30" stroke="#C4B49A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="35" cy="78" rx="14" ry="6" fill="rgba(143,166,139,0.5)" transform="rotate(-40 35 78)"/>
+      <ellipse cx="55" cy="55" rx="13" ry="5.5" fill="rgba(143,166,139,0.45)" transform="rotate(-50 55 55)"/>
+      <ellipse cx="72" cy="35" rx="11" ry="5" fill="rgba(143,166,139,0.4)" transform="rotate(-55 72 35)"/>
+      <circle cx="28" cy="88" r="4" fill="rgba(122,154,181,0.45)"/>
+      <circle cx="22" cy="96" r="3" fill="rgba(122,154,181,0.35)"/>
+      <circle cx="65" cy="43" r="3.5" fill="rgba(122,154,181,0.4)"/>
+    </svg>
+    <svg aria-hidden="true" focusable="false" class="sprig sprig-tr" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 110 Q40 70 80 30" stroke="#C4B49A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="35" cy="78" rx="14" ry="6" fill="rgba(143,166,139,0.5)" transform="rotate(-40 35 78)"/>
+      <ellipse cx="55" cy="55" rx="13" ry="5.5" fill="rgba(143,166,139,0.45)" transform="rotate(-50 55 55)"/>
+      <ellipse cx="72" cy="35" rx="11" ry="5" fill="rgba(143,166,139,0.4)" transform="rotate(-55 72 35)"/>
+      <circle cx="28" cy="88" r="4" fill="rgba(122,154,181,0.45)"/>
+      <circle cx="22" cy="96" r="3" fill="rgba(122,154,181,0.35)"/>
+      <circle cx="65" cy="43" r="3.5" fill="rgba(122,154,181,0.4)"/>
+    </svg>
+    <svg aria-hidden="true" focusable="false" class="sprig sprig-bl" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 110 Q40 70 80 30" stroke="#C4B49A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="35" cy="78" rx="12" ry="5" fill="rgba(143,166,139,0.35)" transform="rotate(-40 35 78)"/>
+      <ellipse cx="55" cy="55" rx="11" ry="4.5" fill="rgba(143,166,139,0.3)" transform="rotate(-50 55 55)"/>
+      <circle cx="28" cy="88" r="3" fill="rgba(122,154,181,0.3)"/>
+    </svg>
+    <svg aria-hidden="true" focusable="false" class="sprig sprig-br" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 110 Q40 70 80 30" stroke="#C4B49A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="35" cy="78" rx="12" ry="5" fill="rgba(143,166,139,0.35)" transform="rotate(-40 35 78)"/>
+      <ellipse cx="55" cy="55" rx="11" ry="4.5" fill="rgba(143,166,139,0.3)" transform="rotate(-50 55 55)"/>
+      <circle cx="28" cy="88" r="3" fill="rgba(122,154,181,0.3)"/>
+    </svg>
+
+    <!-- Central logo image -->
+    <div class="hero-logo-wrap">
+      <img src="logo.PNG" alt="Blue Bird Brushworks logo" class="logo-illustration"/>
+    </div>
+    <template>
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- soft background wash -->
+        <ellipse cx="160" cy="165" rx="130" ry="110" fill="rgba(122,154,181,0.06)"/>
+
+        <!-- arch / wreath frame top -->
+        <path d="M60 155 Q60 60 160 60 Q260 60 260 155" stroke="rgba(122,154,181,0.35)" stroke-width="1.5" fill="none"/>
+        <!-- tiny arrow ornament at top of arch -->
+        <polygon points="160,46 155,56 160,53 165,56" fill="rgba(61,90,114,0.4)"/>
+
+        <!-- Branch -->
+        <path d="M48 195 Q90 184 130 188 Q160 185 200 188 Q238 183 278 198"
+              stroke="#B5A088" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- sub-branches with leaves left -->
+        <path d="M78 190 Q70 176 64 166" stroke="#C4B49A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="60" cy="161" rx="11" ry="5" fill="rgba(143,166,139,0.62)" transform="rotate(-30 60 161)"/>
+        <ellipse cx="52" cy="170" rx="9" ry="4" fill="rgba(143,166,139,0.52)" transform="rotate(-50 52 170)"/>
+        <circle cx="57" cy="155" r="5" fill="rgba(122,154,181,0.52)"/>
+        <circle cx="48" cy="162" r="4" fill="rgba(122,154,181,0.42)"/>
+
+        <!-- sub-branches right -->
+        <path d="M242 188 Q252 174 258 162" stroke="#C4B49A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="262" cy="158" rx="11" ry="5" fill="rgba(143,166,139,0.62)" transform="rotate(30 262 158)"/>
+        <ellipse cx="270" cy="167" rx="9" ry="4" fill="rgba(143,166,139,0.52)" transform="rotate(50 270 167)"/>
+        <circle cx="264" cy="152" r="5" fill="rgba(122,154,181,0.52)"/>
+        <circle cx="273" cy="160" r="4" fill="rgba(122,154,181,0.42)"/>
+
+        <!-- mid branch leaves -->
+        <ellipse cx="108" cy="182" rx="10" ry="4.5" fill="rgba(143,166,139,0.55)" transform="rotate(-15 108 182)"/>
+        <ellipse cx="210" cy="182" rx="10" ry="4.5" fill="rgba(143,166,139,0.55)" transform="rotate(15 210 182)"/>
+
+        <!-- Bird body -->
+        <ellipse cx="168" cy="158" rx="32" ry="24" fill="rgba(100,140,178,0.82)"/>
+        <!-- Wing -->
+        <path d="M148 152 Q155 138 174 142 Q169 160 148 165 Z" fill="rgba(72,112,155,0.75)"/>
+        <!-- Wing feather lines -->
+        <path d="M151 150 Q158 146 168 147" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+        <path d="M150 155 Q157 151 167 152" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" fill="none"/>
+        <!-- Belly warm tan -->
+        <ellipse cx="173" cy="167" rx="18" ry="14" fill="rgba(196,168,130,0.78)"/>
+        <!-- Head -->
+        <circle cx="192" cy="145" r="20" fill="rgba(100,140,178,0.87)"/>
+        <!-- Eye -->
+        <circle cx="197" cy="142" r="5.5" fill="rgba(30,48,65,0.9)"/>
+        <circle cx="198.5" cy="140.5" r="1.8" fill="white"/>
+        <!-- Beak -->
+        <path d="M208 145 L220 147 L208 150 Z" fill="rgba(160,135,95,0.88)"/>
+        <!-- Tail -->
+        <path d="M140 163 Q124 175 118 188 Q130 180 141 172 Z" fill="rgba(72,112,155,0.72)"/>
+
+        <!-- small heart ornament below -->
+        <path d="M156 272 Q156 267 160 270 Q164 267 164 272 Q164 277 160 280 Q156 277 156 272 Z"
+              fill="rgba(122,154,181,0.4)"/>
+
+        <!-- bottom botanical sprigs -->
+        <path d="M110 280 Q135 270 160 275 Q185 270 212 280"
+              stroke="#C4B49A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="128" cy="273" rx="9" ry="4" fill="rgba(143,166,139,0.5)" transform="rotate(-10 128 273)"/>
+        <ellipse cx="192" cy="273" rx="9" ry="4" fill="rgba(143,166,139,0.5)" transform="rotate(10 192 273)"/>
+        <circle cx="145" cy="268" r="3.5" fill="rgba(122,154,181,0.45)"/>
+        <circle cx="175" cy="268" r="3.5" fill="rgba(122,154,181,0.45)"/>
+      </svg>
+    </template>
+
+    <div class="hero-text-card">
+      <!-- Brand name -->
+      <div class="hero-brand">
+        <div class="hero-brand-main">Blue Bird Brushworks</div>
+        <div class="hero-brand-sub">Watercolor Card Company</div>
+      </div>
+
+      <p class="hero-tagline">Hand-painted with love, printed with care</p>
+
+      <div class="hero-divider">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
+          <path d="M9 2 Q11 6 16 9 Q11 12 9 16 Q7 12 2 9 Q7 6 9 2Z" fill="rgba(143,166,139,0.5)"/>
+        </svg>
+      </div>
+
+      <div class="hero-cta-row">
+        <a href="#" class="btn-primary" onclick="showPage('shop')">Shop All Art</a>
+        <a href="#" class="btn-ghost" onclick="showPage('custom')">Request Custom Art</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OUR STORY BAND ── -->
+  <section class="story-band">
+    <div class="story-inner">
+      <div class="story-visual">
+        <img src="aboutMe.JPG" alt="Portrait of the artist behind Blue Bird Brushworks" class="about-photo"/>
+      </div>
+
+      <div class="story-text">
+        <p class="page-eyebrow" style="text-align:left;">Our Story</p>
+        <h2 class="story-title">Watercolors that<br><em>feel like home</em></h2>
+        <p class="story-body">
+          Hi, my name is Anna Jeanette! I'm the heart behind Blue Bird Brushworks. It all started at a kitchen table with a small set of paints and a deep love for birds. Every card in our collection begins as an original watercolor — slow mornings, soft light, the particular quiet of painting something delicate.
+        </p>
+        <p class="story-body">
+          Every card is an original watercolor painting — real paint on real paper, one of a kind. Each purchase comes with an envelope so your card is ready to gift the moment it arrives.
+        </p>
+        <a href="#" class="btn-primary" onclick="showPage('shop')">Shop All Cards</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Nashville, TN &nbsp;·&nbsp; Made with watercolors & warmth &nbsp;·&nbsp; Background image via <a href="https://easy-peasy.ai" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline;">Easy-Peasy.AI</a></footer>
+</div>
+
+<!-- ══ SHOP PAGE ══ -->
+<div id="page-shop" class="page">
+  <div class="shop-section">
+    <div class="page-header">
+      <div class="page-eyebrow">The Collection</div>
+      <h1 class="page-title">Shop All Art</h1>
+      <p class="page-sub">Each card begins as an original watercolor painting, printed on thick textured paper.</p>
+    </div>
+    <div class="cards-grid" id="productsGrid"></div>
+  </div>
+  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Nashville, TN</footer>
+</div>
+
+<!-- ══ CUSTOM REQUEST PAGE ══ -->
+<div id="page-custom" class="page">
+  <div class="custom-section">
+    <div class="page-header">
+      <div class="page-eyebrow">Commission</div>
+      <h1 class="page-title">Request Custom Art</h1>
+      <p class="page-sub">Tell me what you're dreaming of — I'll paint it just for you.</p>
+    </div>
+
+    <div class="form-card">
+      <div id="formBody">
+        <form id="customForm" action="https://formspree.io/f/mjgqwlpv" method="POST" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">Your Name</label>
+            <input type="text" id="fname" name="name" placeholder="Jane Smith" required/>
+          </div>
+          <div class="form-group">
+            <label for="femail">Email Address</label>
+            <input type="email" id="femail" name="email" placeholder="jane@email.com" required/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ftype">Type of Piece</label>
+          <select id="ftype" name="type_of_piece">
+            <option value="">Choose one…</option>
+            <option>Greeting card (A2)</option>
+            <option>Mini print (5×7")</option>
+            <option>Art print (8×10")</option>
+            <option>Gift set (set of 6 cards)</option>
+            <option>Something else — I'll describe below</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fsubject">Subject / Theme</label>
+          <input type="text" id="fsubject" name="subject_theme" placeholder="e.g. a bluebird on a snowy branch, for a Christmas card"/>
+          <p class="form-hint">Birds, botanicals, seasons, pets, places — all welcome.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="fpalette">Color Palette</label>
+          <select id="fpalette" name="color_palette">
+            <option value="">No preference — you decide!</option>
+            <option>Soft blues & sage greens</option>
+            <option>Warm creams & terracotta</option>
+            <option>Cool winter whites & slate</option>
+            <option>Golden autumn tones</option>
+            <option>I'll describe in the notes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="foccasion">Occasion (optional)</label>
+          <input type="text" id="foccasion" name="occasion" placeholder="e.g. wedding, birthday, just because"/>
+        </div>
+
+        <div class="form-group">
+          <label for="fnotes">Additional Notes</label>
+          <textarea id="fnotes" name="additional_notes" placeholder="Any other details, inspiration, or wishes…"></textarea>
+          <p class="form-hint">The more you share, the better I can bring your vision to life.</p>
+        </div>
+
+        <button type="submit" class="submit-btn">Send My Request →</button>
+        </form>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 1rem;display:block;">
+          <circle cx="24" cy="24" r="22" stroke="rgba(143,166,139,0.5)" stroke-width="2"/>
+          <path d="M14 24 L21 31 L34 17" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--deep-slate);margin-bottom:0.5rem;">Request received!</div>
+        <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:1rem;color:var(--muted);">
+          I'll be in touch within a few days to talk through the details. Thank you for trusting me with your vision.
+        </p>
+      </div>
+    </div>
+  </div>
+  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Nashville, TN</footer>
+</div>
+
+</main>
+
+<!-- ORDER STATUS MODAL (shown after Stripe redirect) -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="checkout-modal" role="dialog" aria-modal="true" aria-label="Order status">
+    <button class="checkout-close" onclick="closeCheckout()" aria-label="Close">×</button>
+    <div class="checkout-success" id="checkoutSuccess" style="display:block;">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 1rem;display:block;" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" stroke="rgba(143,166,139,0.5)" stroke-width="2"/>
+        <path d="M14 24 L21 31 L34 17" stroke="var(--sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--deep-slate);margin-bottom:0.5rem;" id="successTitle">Order received!</div>
+      <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:1rem;color:var(--muted);margin-bottom:1.4rem;" id="successMessage">
+        Thank you! I'll be in touch soon with shipping details.
+      </p>
+      <button class="btn-primary" onclick="closeCheckout()">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="handleOverlayClick(event)">
+  <div class="cart-drawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
+    <div class="cart-header">
+      <h3 class="cart-title">Your Cart</h3>
+      <button class="cart-close" onclick="closeCart()" aria-label="Close cart">×</button>
+    </div>
+    <div id="cartItems"><div class="cart-empty">Your cart is empty.<br><em>Find something beautiful above.</em></div></div>
+    <div id="cartFooter" style="display:none;">
+      <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  return false;
+}
+
+// ── PRODUCTS ──
+const products = [
+  { id:1, name:"Eastern Bluebird", desc:"On a winter branch, soft blues", price:6.50, tag:"Bestseller", bg1:"rgba(122,154,181,0.13)", bg2:"rgba(184,203,186,0.12)", birdCol:"#7A9AB5", bellyCol:"#C4A882" },
+  { id:2, name:"Wren in Morning Fog", desc:"Warm grey tones, quiet mood", price:6.50, tag:"New", bg1:"rgba(196,168,130,0.12)", bg2:"rgba(184,203,186,0.1)", birdCol:"#A89070", bellyCol:"#D6B89A" },
+  { id:3, name:"Chickadee on Holly", desc:"Winter berries, holiday warmth", price:6.50, tag:"Holiday", bg1:"rgba(214,169,138,0.1)", bg2:"rgba(122,154,181,0.08)", birdCol:"#5C7A9A", bellyCol:"#E8D0B8" },
+  { id:4, name:"Blue & Sage Wreath", desc:"Full botanical wreath", price:7.50, tag:"Popular", bg1:"rgba(143,166,139,0.14)", bg2:"rgba(122,154,181,0.09)", isWreath:true },
+  { id:5, name:"Finch & Wildflowers", desc:"Gold and sage, joyful", price:6.50, tag:null, bg1:"rgba(196,180,100,0.1)", bg2:"rgba(143,166,139,0.12)", birdCol:"#9AB070", bellyCol:"#E0CC80" },
+  { id:6, name:"Songbird Gift Set", desc:"One of each bird — 6 cards", price:34.00, tag:"Gift Set", bg1:"rgba(122,154,181,0.1)", bg2:"rgba(196,168,130,0.1)", isSet:true },
+];
+
+function birdArt(c, b) {
+  return `<svg viewBox="0 0 100 90" width="88" height="78" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 75 Q33 68 50 72 Q68 68 92 76" stroke="#C4B49A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="30" cy="66" rx="9" ry="3.8" fill="rgba(143,166,139,0.6)" transform="rotate(-18 30 66)"/>
+    <ellipse cx="72" cy="66" rx="9" ry="3.8" fill="rgba(143,166,139,0.6)" transform="rotate(18 72 66)"/>
+    <circle cx="44" cy="63" r="3" fill="rgba(122,154,181,0.48)"/>
+    <circle cx="58" cy="60" r="2.5" fill="rgba(122,154,181,0.4)"/>
+    <ellipse cx="50" cy="55" rx="16" ry="12" fill="${c}" opacity="0.84"/>
+    <path d="M38 52 Q43 44 55 47 Q51 57 38 59 Z" fill="${c}" opacity="0.74"/>
+    <ellipse cx="54" cy="61" rx="10" ry="8" fill="${b}" opacity="0.76"/>
+    <circle cx="62" cy="48" r="10" fill="${c}" opacity="0.88"/>
+    <circle cx="66" cy="46" r="3" fill="rgba(28,42,58,0.9)"/>
+    <circle cx="66.8" cy="45.2" r="1.1" fill="white"/>
+    <path d="M71 48 L78 49 L71 51 Z" fill="rgba(155,125,85,0.88)"/>
+    <path d="M34 58 Q24 65 21 73 Q30 67 36 62 Z" fill="${c}" opacity="0.7"/>
+  </svg>`;
+}
+
+function wreathArt() {
+  let petals = '';
+  for (let i=0; i<10; i++) {
+    const a = i * 36 * Math.PI/180;
+    const x = 50 + 28*Math.cos(a), y = 50 + 28*Math.sin(a);
+    petals += `<ellipse cx="${x}" cy="${y}" rx="9" ry="4" fill="rgba(143,166,139,0.65)" transform="rotate(${i*36+90} ${x} ${y})"/>`;
+  }
+  let dots = '';
+  for (let i=0; i<6; i++) {
+    const a = i * 60 * Math.PI/180;
+    const x = 50 + 28*Math.cos(a), y = 50 + 28*Math.sin(a);
+    dots += `<circle cx="${x}" cy="${y}" r="3.5" fill="rgba(122,154,181,0.52)"/>`;
+  }
+  return `<svg viewBox="0 0 100 100" width="82" height="82" xmlns="http://www.w3.org/2000/svg">${petals}${dots}</svg>`;
+}
+
+function setArt() {
+  return `<svg viewBox="0 0 110 80" width="96" height="72" xmlns="http://www.w3.org/2000/svg">
+    ${[['#7A9AB5','#C4A882',18,42],['#8FA68B','#B8CBBA',55,36],['#5C7A9A','#E8D0B8',92,42]].map(([c,b,x,y])=>`
+      <ellipse cx="${x}" cy="${y}" rx="12" ry="9" fill="${c}" opacity="0.8"/>
+      <ellipse cx="${x+2}" cy="${y+6}" rx="8" ry="6" fill="${b}" opacity="0.72"/>
+      <circle cx="${x+8}" cy="${y-6}" r="8" fill="${c}" opacity="0.86"/>
+      <path d="M${x+14} ${y-5} L${x+19} ${y-4} L${x+14} ${y-2} Z" fill="rgba(155,125,85,0.8)"/>
+    `).join('')}
+  </svg>`;
+}
+
+function getArt(p) {
+  if (p.isSet) return setArt();
+  if (p.isWreath) return wreathArt();
+  return birdArt(p.birdCol, p.bellyCol);
+}
+
+const badgeClass = { 'Bestseller':'badge-bestseller', 'New':'badge-new', 'Popular':'badge-popular', 'Holiday':'badge-holiday', 'Gift Set':'badge-gift-set' };
+
+function renderProducts() {
+  document.getElementById('productsGrid').innerHTML = products.map(p => `
+    <div class="card">
+      <div class="card-img" style="background: radial-gradient(ellipse at 40% 40%, ${p.bg1} 0%, transparent 65%), radial-gradient(ellipse at 70% 65%, ${p.bg2} 0%, transparent 55%), var(--parchment);">
+        ${p.tag ? `<div class="card-badge ${badgeClass[p.tag]||''}">${p.tag}</div>` : ''}
+        <div>${getArt(p)}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-footer">
+          <span class="card-price">$${p.price.toFixed(2)}</span>
+          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── CART ──
+let cart = [];
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++; else cart.push({...p, qty:1});
+  updateCartUI(); openCart();
+}
+function removeFromCart(id) { cart = cart.filter(x => x.id !== id); updateCartUI(); }
+function updateCartUI() {
+  const total = cart.reduce((s,i)=>s+i.price*i.qty, 0);
+  const count = cart.reduce((s,i)=>s+i.qty, 0);
+  const ce = document.getElementById('cartCount');
+  ce.textContent = count; ce.classList.toggle('visible', count > 0);
+  const ie = document.getElementById('cartItems');
+  const fe = document.getElementById('cartFooter');
+  document.getElementById('cartTotal').textContent = '$'+total.toFixed(2);
+  if (!cart.length) {
+    ie.innerHTML = '<div class="cart-empty">Your cart is empty.<br><em>Find something beautiful above.</em></div>';
+    fe.style.display = 'none';
+  } else {
+    fe.style.display = 'block';
+    ie.innerHTML = cart.map(i=>`
+      <div class="cart-item">
+        <div class="ci-thumb">${getArt(i)}</div>
+        <div style="flex:1">
+          <div class="ci-name">${i.name}${i.qty>1?` ×${i.qty}`:''}</div>
+          <div class="ci-price">$${(i.price*i.qty).toFixed(2)}</div>
+        </div>
+        <button class="ci-remove" onclick="removeFromCart(${i.id})">✕</button>
+      </div>`).join('');
+  }
+}
+function openCart() { document.getElementById('cartOverlay').classList.add('open'); }
+function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target===document.getElementById('cartOverlay')) closeCart(); }
+
+async function openCheckout() {
+  if (!cart.length) return;
+  const btn = document.querySelector('.checkout-btn');
+  const originalText = btn.textContent;
+  btn.textContent = 'Redirecting…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart.map(i => ({ id: i.id, qty: i.qty })),
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.url) throw new Error(data.error || 'Checkout failed');
+    // Save cart so we can clear it after successful return
+    sessionStorage.setItem('pendingCheckout', '1');
+    window.location.href = data.url;
+  } catch (err) {
+    console.error(err);
+    alert('Could not start checkout. Please try again or email bluebirdbrushworks@gmail.com.');
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutOverlay').classList.remove('open');
+  // Clean the URL so refresh doesn't re-show the message
+  if (window.location.search) {
+    history.replaceState({}, '', window.location.pathname);
+  }
+}
+
+// Show success/cancel message after Stripe redirects back
+function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const overlay = document.getElementById('checkoutOverlay');
+  const title = document.getElementById('successTitle');
+  const msg = document.getElementById('successMessage');
+  if (params.get('paid') === 'true') {
+    cart = []; updateCartUI();
+    sessionStorage.removeItem('pendingCheckout');
+    title.textContent = 'Order received!';
+    msg.textContent = "Thank you! I'll be in touch soon with shipping details. A receipt has been emailed to you.";
+    overlay.classList.add('open');
+  } else if (params.get('canceled') === 'true') {
+    title.textContent = 'Checkout canceled';
+    msg.textContent = 'No worries — your cart is still here whenever you\'re ready.';
+    overlay.classList.add('open');
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeCheckout(); } });
+
+// ── FORM ──
+async function submitForm(e) {
+  e.preventDefault();
+  const form = document.getElementById('customForm');
+  const btn = form.querySelector('.submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      document.getElementById('formBody').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } else {
+      btn.textContent = 'Send My Request →';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again or email bluebirdbrushworks@gmail.com directly.');
+    }
+  } catch {
+    btn.textContent = 'Send My Request →';
+    btn.disabled = false;
+    alert('Could not send — please check your connection or email bluebirdbrushworks@gmail.com directly.');
+  }
+}
+
+renderProducts();
+handleStripeReturn();
+</script>
+</body>
+</html>
