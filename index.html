@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Blue Bird Brushworks — Hand-Painted Watercolor Greeting Cards</title>
+<title>Blue Bird Brushworks - Hand-Painted Watercolor Greeting Cards</title>
 <meta name="description" content="Original watercolor greeting cards, hand-painted in Cookeville, TN. Birds, botanicals, and seasonal art. Free shipping on orders over $50. Custom commissions available."/>
 <meta name="keywords" content="watercolor cards, handmade greeting cards, bird art, custom watercolor, Cookeville artist, Tennessee artist, original artwork, painted greeting cards"/>
 <meta name="author" content="Blue Bird Brushworks"/>
@@ -17,14 +17,14 @@
 <!-- Open Graph (Facebook, iMessage, etc.) -->
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://bluebirdbrushworks.com/"/>
-<meta property="og:title" content="Blue Bird Brushworks — Hand-Painted Watercolor Greeting Cards"/>
+<meta property="og:title" content="Blue Bird Brushworks - Hand-Painted Watercolor Greeting Cards"/>
 <meta property="og:description" content="Original watercolor greeting cards, hand-painted in Cookeville, TN. Birds, botanicals, and seasonal art. Custom commissions welcome."/>
 <meta property="og:image" content="https://bluebirdbrushworks.com/logo.PNG"/>
 <meta property="og:site_name" content="Blue Bird Brushworks"/>
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Blue Bird Brushworks — Hand-Painted Watercolor Greeting Cards"/>
+<meta name="twitter:title" content="Blue Bird Brushworks - Hand-Painted Watercolor Greeting Cards"/>
 <meta name="twitter:description" content="Original watercolor greeting cards, hand-painted in Cookeville, TN. Birds, botanicals, and seasonal art."/>
 <meta name="twitter:image" content="https://bluebirdbrushworks.com/logo.PNG"/>
 
@@ -722,10 +722,10 @@ footer {
         <p class="page-eyebrow" style="text-align:left;">Our Story</p>
         <h2 class="story-title">Watercolors that<br><em>feel like home</em></h2>
         <p class="story-body">
-          Hi, my name is Anna Jeanette! I'm the heart behind Blue Bird Brushworks. It all started at a kitchen table with a small set of paints and a deep love for birds. Every card in our collection begins as an original watercolor — slow mornings, soft light, the particular quiet of painting something delicate.
+          Hi, my name is Anna Jeanette! I'm the heart behind Blue Bird Brushworks. It all started at a kitchen table with a small set of paints and a deep love for birds. Every card in our collection is an original watercolor that began with slow mornings, soft light, and the particular quiet of painting something delicate.
         </p>
         <p class="story-body">
-          Every card is an original watercolor painting — real paint on real paper, one of a kind. Each purchase comes with an envelope so your card is ready to gift the moment it arrives.
+          Every card is an original one of a kind watercolor painting. Each purchase comes with an envelope so your card is ready to gift the moment it arrives.
         </p>
         <a href="#" class="btn-primary" onclick="showPage('shop')">Shop All Cards</a>
       </div>
@@ -754,7 +754,7 @@ footer {
     <div class="page-header">
       <div class="page-eyebrow">Commission</div>
       <h1 class="page-title">Request Custom Art</h1>
-      <p class="page-sub">Tell me what you're dreaming of — I'll paint it just for you.</p>
+      <p class="page-sub">Tell me what you're dreaming of and I'll paint it just for you.</p>
     </div>
 
     <div class="form-card">
@@ -779,20 +779,20 @@ footer {
             <option>Mini print (5×7")</option>
             <option>Art print (8×10")</option>
             <option>Gift set (set of 6 cards)</option>
-            <option>Something else — I'll describe below</option>
+            <option>Something else, I'll describe below</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="fsubject">Subject / Theme</label>
           <input type="text" id="fsubject" name="subject_theme" placeholder="e.g. a bluebird on a snowy branch, for a Christmas card"/>
-          <p class="form-hint">Birds, botanicals, seasons, pets, places — all welcome.</p>
+          <p class="form-hint">Birds, botanicals, seasons, pets, places, all welcome.</p>
         </div>
 
         <div class="form-group">
           <label for="fpalette">Color Palette</label>
           <select id="fpalette" name="color_palette">
-            <option value="">No preference — you decide!</option>
+            <option value="">No preference, you decide!</option>
             <option>Soft blues & sage greens</option>
             <option>Warm creams & terracotta</option>
             <option>Cool winter whites & slate</option>
@@ -883,7 +883,7 @@ const products = [
   { id:3, name:"Chickadee on Holly", desc:"Winter berries, holiday warmth", price:6.50, tag:"Holiday", bg1:"rgba(214,169,138,0.1)", bg2:"rgba(122,154,181,0.08)", birdCol:"#5C7A9A", bellyCol:"#E8D0B8" },
   { id:4, name:"Blue & Sage Wreath", desc:"Full botanical wreath", price:7.50, tag:"Popular", bg1:"rgba(143,166,139,0.14)", bg2:"rgba(122,154,181,0.09)", isWreath:true },
   { id:5, name:"Finch & Wildflowers", desc:"Gold and sage, joyful", price:6.50, tag:null, bg1:"rgba(196,180,100,0.1)", bg2:"rgba(143,166,139,0.12)", birdCol:"#9AB070", bellyCol:"#E0CC80" },
-  { id:6, name:"Songbird Gift Set", desc:"One of each bird — 6 cards", price:34.00, tag:"Gift Set", bg1:"rgba(122,154,181,0.1)", bg2:"rgba(196,168,130,0.1)", isSet:true },
+  { id:6, name:"Songbird Gift Set", desc:"One of each bird: 6 cards", price:34.00, tag:"Gift Set", bg1:"rgba(122,154,181,0.1)", bg2:"rgba(196,168,130,0.1)", isSet:true },
 ];
 
 function birdArt(c, b) {
@@ -1011,7 +1011,7 @@ function updateCartUI() {
     hint.style.color = 'var(--sage)';
   } else {
     const remaining = (50 - total).toFixed(2);
-    hint.textContent = `Add $${remaining} more for free shipping — otherwise $5 flat`;
+    hint.textContent = `Add $${remaining} more for free shipping, otherwise $5 flat`;
     hint.style.color = 'var(--muted)';
   }
   if (!cart.length) {
@@ -1088,7 +1088,7 @@ function handleStripeReturn() {
     overlay.classList.add('open');
   } else if (params.get('canceled') === 'true') {
     title.textContent = 'Checkout canceled';
-    msg.textContent = 'No worries — your cart is still here whenever you\'re ready.';
+    msg.textContent = 'No worries! Your cart is still here whenever you\'re ready.';
     overlay.classList.add('open');
   }
 }
@@ -1114,12 +1114,12 @@ async function submitForm(e) {
     } else {
       btn.textContent = 'Send My Request →';
       btn.disabled = false;
-      alert('Something went wrong. Please try again or email bluebirdbrushworks@gmail.com directly.');
+      alert('Something went wrong, please try again.');
     }
   } catch {
     btn.textContent = 'Send My Request →';
     btn.disabled = false;
-    alert('Could not send — please check your connection or email bluebirdbrushworks@gmail.com directly.');
+    alert('Could not send, please check your connection.');
   }
 }
 
