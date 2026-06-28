@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Don't index the serverless API endpoints
+Disallow: /api/
+
+Sitemap: https://bluebirdbrushworks.com/sitemap.xml
