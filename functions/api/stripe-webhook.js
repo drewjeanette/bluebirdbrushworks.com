@@ -30,10 +30,12 @@ export async function onRequestPost({ request, env }) {
       .map(li => `${li.description} ×${li.quantity} — $${(li.amount_total / 100).toFixed(2)}`)
       .join('\n');
 
-    const ship = session.shipping_details || {};
+    // Newer Stripe API nests shipping under collected_information; fall back to the old top-level field
+    const ship = session.collected_information?.shipping_details || session.shipping_details || {};
     const addr = ship.address || {};
+    const customerName = ship.name || session.customer_details?.name || '';
     const shippingAddress = [
-      ship.name,
+      customerName,
       addr.line1,
       addr.line2,
       [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', '),
@@ -53,7 +55,7 @@ export async function onRequestPost({ request, env }) {
           body: JSON.stringify({
             _subject: `New Paid Order — $${(session.amount_total / 100).toFixed(2)}`,
             customer_email: session.customer_details?.email,
-            customer_name: ship.name,
+            customer_name: customerName,
             shipping_address: shippingAddress,
             items: itemsList,
             amount_paid: `$${(session.amount_total / 100).toFixed(2)}`,
