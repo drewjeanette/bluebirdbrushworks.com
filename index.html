@@ -423,8 +423,17 @@ select { cursor: pointer; }
 .cart-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: var(--deep-slate); margin: 1.3rem 0 0.7rem; }
 .checkout-btn { width: 100%; padding: 0.9rem; background: var(--dusty-blue); color: white; border: none; border-radius: 24px; font-family: 'Lato', sans-serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
 .checkout-btn:hover { background: var(--slate); }
-.cart-count { background: var(--warm-tan); color: white; border-radius: 10px; padding: 0.08rem 0.42rem; font-size: 0.68rem; font-weight: 700; display: none; margin-left: 0.3rem; }
-.cart-count.visible { display: inline; }
+.cart-count {
+  background: var(--dusty-blue); color: white;
+  border-radius: 50%;
+  min-width: 1.35rem; height: 1.35rem;
+  padding: 0 0.35rem;
+  font-size: 0.78rem; font-weight: 700; line-height: 1.35rem;
+  display: none; margin-left: 0.4rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(44,63,80,0.2);
+}
+.cart-count.visible { display: inline-block; }
 
 /* ── CHECKOUT MODAL ── */
 .checkout-overlay {
@@ -798,7 +807,7 @@ footer {
     <div id="cartItems"><div class="cart-empty">Your cart is empty.<br><em>Find something beautiful above.</em></div></div>
     <div id="cartFooter" style="display:none;">
       <div class="cart-total"><span>Subtotal</span><span id="cartTotal">$0.00</span></div>
-      <p id="shippingHint" style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.85rem;color:var(--muted);text-align:center;margin:0 0 0.7rem;"></p>
+      <p id="shippingHint" style="font-family:'Lato',sans-serif;font-size:1rem;font-weight:400;color:var(--slate);text-align:center;margin:0.3rem 0 1rem;line-height:1.4;"></p>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
     </div>
   </div>
@@ -924,7 +933,7 @@ function addToCart(id) {
   const p = products.find(x => x.id === id);
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++; else cart.push({...p, qty:1});
-  saveCart(); updateCartUI(); openCart();
+  saveCart(); updateCartUI();
 }
 function removeFromCart(id) { cart = cart.filter(x => x.id !== id); saveCart(); updateCartUI(); }
 function updateCartUI() {
