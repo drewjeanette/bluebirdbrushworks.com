@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Stats — Studio Dashboard</title>
+<link rel="icon" type="image/png" href="/logo.PNG"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F7F2E8;
+  --parchment: #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate: #3D5A72;
+  --deep-slate: #2B3F52;
+  --sage: #8FA68B;
+  --soft-sage: #B8CBBA;
+  --warm-tan: #C4A882;
+  --muted: #7A8591;
+  --ink: #2C3E50;
+}
+body { background: var(--cream); font-family: 'Lato', sans-serif; font-weight: 300; color: var(--ink); min-height: 100vh; }
+img { max-width: 100%; height: auto; display: block; }
+
+.admin-nav {
+  background: white; border-bottom: 1px solid rgba(196,168,130,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.6rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.admin-nav-left { display: flex; align-items: center; gap: 0.8rem; }
+.admin-nav-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.admin-nav-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--deep-slate); }
+.admin-nav-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.nav-link {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+}
+.nav-link:hover { color: var(--slate); }
+.nav-link.active { color: var(--slate); }
+.logout-btn {
+  background: none; border: 1.5px solid var(--soft-sage);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--slate); cursor: pointer; font-family: 'Lato', sans-serif;
+}
+
+.admin-main { max-width: 1100px; margin: 0 auto; padding: 2.4rem 1.6rem 4rem; }
+.page-header { margin-bottom: 1.8rem; }
+h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 400; color: var(--deep-slate); }
+.lede { font-size: 0.92rem; color: var(--muted); margin-top: 0.3rem; }
+
+.stat-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 2.2rem;
+}
+.stat-card {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 12px; padding: 1.2rem 1.3rem;
+}
+.stat-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--dusty-blue); margin-bottom: 0.35rem;
+}
+.stat-value {
+  font-family: 'Playfair Display', serif; font-size: 1.8rem;
+  color: var(--deep-slate); line-height: 1.1;
+}
+.stat-sub {
+  font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem;
+}
+
+.section { margin-bottom: 2.4rem; }
+.section-title {
+  font-family: 'Playfair Display', serif; font-size: 1.3rem;
+  color: var(--deep-slate); margin-bottom: 1rem;
+}
+
+/* Top sellers horizontal bars */
+.bar-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.bar-row {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 8px; padding: 0.75rem 1rem;
+  position: relative; overflow: hidden;
+}
+.bar-fill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(122,154,181,0.15), rgba(184,203,186,0.12));
+  z-index: 0;
+}
+.bar-content {
+  position: relative; z-index: 1;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+}
+.bar-rank {
+  font-family: 'Playfair Display', serif; color: var(--warm-tan);
+  font-size: 1.1rem; width: 1.8rem; flex-shrink: 0;
+}
+.bar-name {
+  font-family: 'Playfair Display', serif; color: var(--deep-slate);
+  flex: 1; font-size: 0.95rem;
+}
+.bar-stats {
+  display: flex; gap: 1.2rem; flex-shrink: 0;
+  font-size: 0.85rem;
+}
+.bar-qty { color: var(--slate); font-weight: 700; }
+.bar-revenue { color: var(--muted); }
+
+/* Recent orders */
+.orders-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.order-card {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 10px; padding: 1rem 1.2rem;
+}
+.order-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.order-name {
+  font-family: 'Playfair Display', serif; color: var(--deep-slate); font-size: 1rem;
+}
+.order-amount { color: var(--slate); font-weight: 700; font-size: 1rem; }
+.order-meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.7rem; }
+.order-meta a { color: var(--dusty-blue); text-decoration: none; }
+.order-items {
+  font-size: 0.85rem; color: var(--slate);
+  padding-top: 0.6rem; border-top: 1px dashed var(--parchment);
+}
+.order-items div { padding: 0.15rem 0; }
+.order-shipping {
+  margin-top: 0.6rem; padding-top: 0.6rem;
+  border-top: 1px dashed var(--parchment);
+  font-size: 0.82rem; color: var(--muted); white-space: pre-line; line-height: 1.5;
+}
+.order-toggle {
+  margin-top: 0.4rem; background: none; border: none;
+  color: var(--dusty-blue); cursor: pointer; font-family: 'Lato', sans-serif;
+  font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0;
+}
+.order-details { display: none; }
+.order-details.open { display: block; }
+
+.empty {
+  text-align: center; padding: 3rem 1rem;
+  color: var(--muted); font-style: italic;
+  background: white; border: 1px dashed var(--parchment); border-radius: 10px;
+}
+
+.traffic-card {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 12px; padding: 1.5rem 1.5rem;
+  margin-bottom: 2.4rem;
+}
+.traffic-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
+.btn-ghost {
+  display: inline-block; background: transparent;
+  border: 1.5px solid var(--soft-sage);
+  color: var(--slate); text-decoration: none;
+  border-radius: 22px; padding: 0.55rem 1.3rem;
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.btn-ghost:hover { border-color: var(--dusty-blue); color: var(--dusty-blue); background: rgba(122,154,181,0.05); }
+
+.skeleton { color: var(--muted); text-align: center; padding: 3rem; font-style: italic; }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="admin-nav-left">
+    <img src="/logo.PNG" alt="" class="admin-nav-logo"/>
+    <div class="admin-nav-title">Studio Dashboard</div>
+  </div>
+  <div class="admin-nav-right">
+    <a href="/admin" class="nav-link">Home</a>
+    <a href="/admin/products" class="nav-link">Products</a>
+    <a href="/admin/content" class="nav-link">Content</a>
+    <a href="/admin/stats" class="nav-link active">Stats</a>
+    <a href="/" class="nav-link" target="_blank">View Site →</a>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<main class="admin-main">
+  <div class="page-header">
+    <h1>Stats</h1>
+    <p class="lede">Sales, revenue, and what people are loving most.</p>
+  </div>
+
+  <div id="content">
+    <p class="skeleton">Loading…</p>
+  </div>
+</main>
+
+<script>
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  window.location.href = '/admin/login';
+}
+
+function money(cents) { return '$' + (cents / 100).toFixed(2); }
+
+function relTime(unixSec) {
+  const diff = Math.floor(Date.now() / 1000) - unixSec;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  if (diff < 86400 * 7) return Math.floor(diff/86400) + 'd ago';
+  return new Date(unixSec * 1000).toLocaleDateString();
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function toggleOrder(id) {
+  document.getElementById('details-' + id).classList.toggle('open');
+}
+
+async function loadStats() {
+  try {
+    const res = await fetch('/api/admin/stats');
+    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    const data = await res.json();
+    render(data);
+  } catch (err) {
+    document.getElementById('content').innerHTML =
+      '<p class="skeleton" style="color:#c0392b;">Could not load stats. Refresh to try again.</p>';
+  }
+}
+
+function render(data) {
+  const { totals, avgOrderCents, topProducts, recentOrders, catalog } = data;
+  const maxQty = topProducts.length ? Math.max(...topProducts.map(p => p.qty)) : 1;
+
+  document.getElementById('content').innerHTML = `
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-eyebrow">Last 7 Days</div>
+        <div class="stat-value">${money(totals.last7.revenue_cents)}</div>
+        <div class="stat-sub">${totals.last7.orders} order${totals.last7.orders === 1 ? '' : 's'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-eyebrow">Last 30 Days</div>
+        <div class="stat-value">${money(totals.last30.revenue_cents)}</div>
+        <div class="stat-sub">${totals.last30.orders} order${totals.last30.orders === 1 ? '' : 's'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-eyebrow">All Time</div>
+        <div class="stat-value">${money(totals.allTime.revenue_cents)}</div>
+        <div class="stat-sub">${totals.allTime.orders} order${totals.allTime.orders === 1 ? '' : 's'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-eyebrow">Avg Order</div>
+        <div class="stat-value">${money(avgOrderCents)}</div>
+        <div class="stat-sub">${catalog.total} card${catalog.total === 1 ? '' : 's'} in shop · ${catalog.sold_out} sold out</div>
+      </div>
+    </div>
+
+    <div class="traffic-card">
+      <div class="stat-eyebrow" style="margin-bottom:0.6rem;">Site Traffic</div>
+      <p>Visitor counts, top pages, and where people come from are tracked by Cloudflare Web Analytics — free, private, and built in. Open the Cloudflare dashboard to see the latest numbers.</p>
+      <a href="https://dash.cloudflare.com/?to=/:account/pages" target="_blank" rel="noopener" class="btn-ghost">View traffic in Cloudflare →</a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Most Popular Cards</div>
+      ${topProducts.length ? `
+        <div class="bar-list">
+          ${topProducts.map((p, i) => `
+            <div class="bar-row">
+              <div class="bar-fill" style="width:${Math.max(8, Math.round(p.qty / maxQty * 100))}%"></div>
+              <div class="bar-content">
+                <span class="bar-rank">#${i + 1}</span>
+                <span class="bar-name">${escapeHtml(p.name)}</span>
+                <span class="bar-stats">
+                  <span class="bar-qty">${p.qty} sold</span>
+                  <span class="bar-revenue">${money(p.revenue_cents)}</span>
+                </span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : `<div class="empty">No sales yet — once orders come in, your top sellers will show up here.</div>`}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Recent Orders</div>
+      ${recentOrders.length ? `
+        <div class="orders-list">
+          ${recentOrders.map(o => `
+            <div class="order-card">
+              <div class="order-head">
+                <div class="order-name">${escapeHtml(o.customer_name || 'Customer')}</div>
+                <div class="order-amount">${money(o.amount_cents)}</div>
+              </div>
+              <div class="order-meta">
+                ${relTime(o.created_at)} ·
+                <a href="mailto:${escapeHtml(o.customer_email || '')}">${escapeHtml(o.customer_email || '')}</a>
+              </div>
+              <button class="order-toggle" onclick="toggleOrder(${o.id})">Show details</button>
+              <div class="order-details" id="details-${o.id}">
+                <div class="order-items">
+                  ${(o.items || []).map(i => `
+                    <div>${escapeHtml(i.product_name)} ×${i.qty} — ${money(i.qty * i.unit_price_cents)}</div>
+                  `).join('') || '<div style="color:var(--muted);font-style:italic;">No item detail recorded.</div>'}
+                </div>
+                ${o.shipping_address ? `<div class="order-shipping">${escapeHtml(o.shipping_address)}</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : `<div class="empty">No orders yet.</div>`}
+    </div>
+  `;
+}
+
+loadStats();
+</script>
+</body>
+</html>
