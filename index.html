@@ -419,6 +419,16 @@ select { cursor: pointer; }
 .ci-price { font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }
 .ci-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem; align-self: start; margin-left: auto; }
 .ci-remove:hover { color: #c0392b; }
+.ci-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+.ci-qty button {
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  border: 1.5px solid var(--soft-sage); background: var(--cream);
+  color: var(--slate); cursor: pointer; font-size: 0.95rem; font-weight: 600;
+  line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.ci-qty button:hover { border-color: var(--dusty-blue); background: rgba(122,154,181,0.1); }
+.ci-qty-value { min-width: 1.5rem; text-align: center; font-weight: 600; color: var(--deep-slate); font-size: 0.95rem; }
 .cart-empty { text-align: center; padding: 2.5rem 1rem; font-family: 'IM Fell English', serif; font-style: italic; font-size: 1rem; color: var(--muted); }
 .cart-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; color: var(--deep-slate); margin: 1.3rem 0 0.7rem; }
 .checkout-btn { width: 100%; padding: 0.9rem; background: var(--dusty-blue); color: white; border: none; border-radius: 24px; font-family: 'Lato', sans-serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
@@ -936,6 +946,13 @@ function addToCart(id) {
   saveCart(); updateCartUI();
 }
 function removeFromCart(id) { cart = cart.filter(x => x.id !== id); saveCart(); updateCartUI(); }
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty = Math.max(0, Math.min(99, item.qty + delta));
+  if (item.qty === 0) cart = cart.filter(x => x.id !== id);
+  saveCart(); updateCartUI();
+}
 function updateCartUI() {
   const total = cart.reduce((s,i)=>s+i.price*i.qty, 0);
   const count = cart.reduce((s,i)=>s+i.qty, 0);
@@ -962,10 +979,15 @@ function updateCartUI() {
       <div class="cart-item">
         <div class="ci-thumb">${getArt(i)}</div>
         <div style="flex:1">
-          <div class="ci-name">${i.name}${i.qty>1?` ×${i.qty}`:''}</div>
+          <div class="ci-name">${i.name}</div>
           <div class="ci-price">$${(i.price*i.qty).toFixed(2)}</div>
+          <div class="ci-qty">
+            <button onclick="changeQty(${i.id}, -1)" aria-label="Decrease quantity">−</button>
+            <span class="ci-qty-value">${i.qty}</span>
+            <button onclick="changeQty(${i.id}, 1)" aria-label="Increase quantity">+</button>
+          </div>
         </div>
-        <button class="ci-remove" onclick="removeFromCart(${i.id})">✕</button>
+        <button class="ci-remove" onclick="removeFromCart(${i.id})" aria-label="Remove from cart">✕</button>
       </div>`).join('');
   }
 }
