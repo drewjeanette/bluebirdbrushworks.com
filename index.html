@@ -896,14 +896,37 @@ function renderProducts() {
 }
 
 // ── CART ──
-let cart = [];
+const CART_STORAGE_KEY = 'bluebirdCart';
+let cart = loadCart();
+
+function loadCart() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
+    // Rehydrate with current product data in case prices/names changed
+    return saved
+      .map(item => {
+        const p = products.find(x => x.id === item.id);
+        return p ? { ...p, qty: item.qty } : null;
+      })
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart.map(i => ({ id: i.id, qty: i.qty }))));
+  } catch {}
+}
+
 function addToCart(id) {
   const p = products.find(x => x.id === id);
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++; else cart.push({...p, qty:1});
-  updateCartUI(); openCart();
+  saveCart(); updateCartUI(); openCart();
 }
-function removeFromCart(id) { cart = cart.filter(x => x.id !== id); updateCartUI(); }
+function removeFromCart(id) { cart = cart.filter(x => x.id !== id); saveCart(); updateCartUI(); }
 function updateCartUI() {
   const total = cart.reduce((s,i)=>s+i.price*i.qty, 0);
   const count = cart.reduce((s,i)=>s+i.qty, 0);
@@ -983,7 +1006,7 @@ function handleStripeReturn() {
   const title = document.getElementById('successTitle');
   const msg = document.getElementById('successMessage');
   if (params.get('paid') === 'true') {
-    cart = []; updateCartUI();
+    cart = []; saveCart(); updateCartUI();
     sessionStorage.removeItem('pendingCheckout');
     title.textContent = 'Order received!';
     msg.textContent = "Thank you! I'll be in touch soon with shipping details. A receipt has been emailed to you.";
