@@ -178,6 +178,7 @@ h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 400; 
     <a href="/admin/products" class="nav-link">Products</a>
     <a href="/admin/content" class="nav-link">Content</a>
     <a href="/admin/stats" class="nav-link active">Stats</a>
+    <a href="/admin/promos" class="nav-link">Promos</a>
     <a href="/" class="nav-link" target="_blank">View Site →</a>
     <button class="logout-btn" onclick="logout()">Sign Out</button>
   </div>
@@ -259,12 +260,6 @@ function render(data) {
         <div class="stat-value">${money(avgOrderCents)}</div>
         <div class="stat-sub">${catalog.total} card${catalog.total === 1 ? '' : 's'} in shop · ${catalog.sold_out} sold out</div>
       </div>
-    </div>
-
-    <div class="traffic-card">
-      <div class="stat-eyebrow" style="margin-bottom:0.6rem;">Site Traffic</div>
-      <p>Visitor counts, top pages, and where people come from are tracked by Cloudflare Web Analytics — free, private, and built in. Open the Cloudflare dashboard to see the latest numbers.</p>
-      <a href="https://dash.cloudflare.com/?to=/:account/pages" target="_blank" rel="noopener" class="btn-ghost">View traffic in Cloudflare →</a>
     </div>
 
     <div class="section">

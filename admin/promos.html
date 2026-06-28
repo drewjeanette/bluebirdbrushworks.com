@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Promo Codes — Studio Dashboard</title>
+<link rel="icon" type="image/png" href="/logo.PNG"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F7F2E8;
+  --parchment: #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate: #3D5A72;
+  --deep-slate: #2B3F52;
+  --sage: #8FA68B;
+  --soft-sage: #B8CBBA;
+  --warm-tan: #C4A882;
+  --muted: #7A8591;
+  --ink: #2C3E50;
+}
+body { background: var(--cream); font-family: 'Lato', sans-serif; font-weight: 300; color: var(--ink); min-height: 100vh; }
+img { max-width: 100%; height: auto; display: block; }
+
+.admin-nav {
+  background: white; border-bottom: 1px solid rgba(196,168,130,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.6rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.admin-nav-left { display: flex; align-items: center; gap: 0.8rem; }
+.admin-nav-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.admin-nav-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--deep-slate); }
+.admin-nav-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.nav-link {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+}
+.nav-link:hover { color: var(--slate); }
+.nav-link.active { color: var(--slate); }
+.logout-btn {
+  background: none; border: 1.5px solid var(--soft-sage);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--slate); cursor: pointer; font-family: 'Lato', sans-serif;
+}
+
+.admin-main { max-width: 900px; margin: 0 auto; padding: 2.4rem 1.6rem 4rem; }
+.page-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 1.8rem;
+}
+h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 400; color: var(--deep-slate); }
+.lede { font-size: 0.92rem; color: var(--muted); margin-top: 0.3rem; }
+
+.btn {
+  background: var(--dusty-blue); color: white;
+  border: none; border-radius: 22px;
+  padding: 0.65rem 1.3rem; font-size: 0.74rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Lato', sans-serif;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--slate); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--soft-sage); color: var(--slate); }
+.btn-ghost:hover { background: rgba(122,154,181,0.07); border-color: var(--dusty-blue); }
+.btn-danger { background: #c0392b; }
+.btn-danger:hover { background: #962c20; }
+
+.promo-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.promo-card {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 10px; padding: 1.1rem 1.3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+.promo-card.inactive { opacity: 0.6; }
+.promo-info { flex: 1; min-width: 200px; }
+.promo-code {
+  font-family: 'Playfair Display', serif; font-size: 1.2rem;
+  color: var(--deep-slate); letter-spacing: 0.05em;
+}
+.promo-code .status-pill {
+  font-family: 'Lato', sans-serif; font-size: 0.65rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 0.18rem 0.55rem; border-radius: 10px;
+  margin-left: 0.6rem; vertical-align: middle;
+}
+.status-active { background: rgba(143,166,139,0.25); color: #3d6b40; }
+.status-inactive { background: rgba(196,168,130,0.25); color: var(--warm-tan); }
+.promo-discount {
+  font-size: 0.95rem; color: var(--slate); font-weight: 700;
+  margin-top: 0.2rem;
+}
+.promo-meta {
+  font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem;
+  line-height: 1.5;
+}
+.promo-actions { display: flex; gap: 0.5rem; }
+.promo-actions .btn { padding: 0.45rem 0.95rem; font-size: 0.68rem; }
+
+.empty-state {
+  text-align: center; padding: 3.5rem 1rem;
+  background: white; border: 1px dashed var(--parchment); border-radius: 10px;
+  color: var(--muted);
+}
+.empty-state p { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 1rem; color: var(--deep-slate); }
+.empty-state .sub { font-style: italic; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(44,63,80,0.45);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--cream); border-radius: 12px;
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  padding: 1.8rem 1.8rem 2rem;
+  position: relative;
+}
+.modal-close {
+  position: absolute; top: 0.8rem; right: 1rem;
+  background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted);
+}
+.modal h2 {
+  font-family: 'Playfair Display', serif; font-weight: 400; font-size: 1.3rem;
+  color: var(--deep-slate); margin-bottom: 1.3rem;
+}
+.form-group { margin-bottom: 1.1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+label {
+  display: block; font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--slate); margin-bottom: 0.4rem;
+}
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%; border: 1.5px solid var(--parchment);
+  border-radius: 7px; padding: 0.6rem 0.85rem;
+  font-family: 'Lato', sans-serif; font-size: 0.95rem;
+  background: white; color: var(--ink); outline: none;
+}
+input:focus, select:focus { border-color: var(--dusty-blue); }
+.checkbox-row { display: flex; align-items: center; gap: 0.5rem; }
+.checkbox-row input { width: 1.1rem; height: 1.1rem; cursor: pointer; }
+.checkbox-row label { margin-bottom: 0; cursor: pointer; }
+.field-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; font-style: italic; }
+
+.modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+.toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--deep-slate); color: white;
+  padding: 0.7rem 1.4rem; border-radius: 24px;
+  font-size: 0.85rem; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+  z-index: 200;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: #c0392b; }
+.skeleton { color: var(--muted); text-align: center; padding: 3rem; font-style: italic; }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="admin-nav-left">
+    <img src="/logo.PNG" alt="" class="admin-nav-logo"/>
+    <div class="admin-nav-title">Studio Dashboard</div>
+  </div>
+  <div class="admin-nav-right">
+    <a href="/admin" class="nav-link">Home</a>
+    <a href="/admin/products" class="nav-link">Products</a>
+    <a href="/admin/content" class="nav-link">Content</a>
+    <a href="/admin/stats" class="nav-link">Stats</a>
+    <a href="/admin/promos" class="nav-link active">Promos</a>
+    <a href="/" class="nav-link" target="_blank">View Site →</a>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<main class="admin-main">
+  <div class="page-header">
+    <div>
+      <h1>Promo Codes</h1>
+      <p class="lede">Create discount codes customers enter at checkout.</p>
+    </div>
+    <button class="btn" onclick="openModal()">+ New Code</button>
+  </div>
+
+  <div id="promoList">
+    <p class="skeleton">Loading…</p>
+  </div>
+</main>
+
+<!-- New promo modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <h2>Create Promo Code</h2>
+    <form id="promoForm">
+      <div class="form-group">
+        <label for="code">Code</label>
+        <input type="text" id="code" required maxlength="30" placeholder="WELCOME15" style="text-transform:uppercase;letter-spacing:0.08em;font-weight:700;"/>
+        <p class="field-hint">Letters, numbers, dashes, or underscores. Customers type this at checkout.</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="discountType">Discount type</label>
+          <select id="discountType">
+            <option value="percent">% off</option>
+            <option value="amount">$ off</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="discountValue">Amount</label>
+          <input type="number" id="discountValue" required min="0.01" step="0.01" placeholder="15"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="maxRedemptions">Max uses (optional)</label>
+          <input type="number" id="maxRedemptions" min="1" step="1" placeholder="Unlimited"/>
+        </div>
+        <div class="form-group">
+          <label for="expiresAt">Expires (optional)</label>
+          <input type="date" id="expiresAt"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="minimumAmount">Minimum order (optional)</label>
+        <input type="number" id="minimumAmount" min="0" step="0.01" placeholder="e.g. 25.00"/>
+        <p class="field-hint">Customer's cart must total at least this much (before discount).</p>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-row">
+          <input type="checkbox" id="firstTimeOnly"/>
+          <label for="firstTimeOnly">First-time customers only</label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn" id="saveBtn">Create Code</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  window.location.href = '/admin/login';
+}
+
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('error', isError);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function fmtDate(unixSec) {
+  if (!unixSec) return null;
+  return new Date(unixSec * 1000).toLocaleDateString();
+}
+
+function describeDiscount(p) {
+  if (!p.coupon) return '—';
+  if (p.coupon.percent_off) return `${p.coupon.percent_off}% off`;
+  if (p.coupon.amount_off) return `$${(p.coupon.amount_off / 100).toFixed(2)} off`;
+  return '—';
+}
+
+function describeMeta(p) {
+  const bits = [];
+  if (p.max_redemptions) bits.push(`${p.times_redeemed} / ${p.max_redemptions} used`);
+  else bits.push(`${p.times_redeemed} used`);
+  if (p.expires_at) bits.push(`expires ${fmtDate(p.expires_at)}`);
+  if (p.restrictions?.minimum_amount) bits.push(`min order $${(p.restrictions.minimum_amount / 100).toFixed(2)}`);
+  if (p.restrictions?.first_time_transaction) bits.push('first-time only');
+  return bits.join(' · ');
+}
+
+async function loadPromos() {
+  try {
+    const res = await fetch('/api/admin/promos');
+    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Failed to load promos');
+    }
+    const promos = await res.json();
+    renderList(promos);
+  } catch (err) {
+    document.getElementById('promoList').innerHTML =
+      `<p class="skeleton" style="color:#c0392b;">${escapeHtml(err.message)}</p>`;
+  }
+}
+
+function renderList(promos) {
+  const container = document.getElementById('promoList');
+  if (!promos.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>No promo codes yet.</p>
+        <div class="sub">Create your first one to offer a discount at checkout.</div>
+        <button class="btn" onclick="openModal()">+ Create Promo Code</button>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `
+    <div class="promo-list">
+      ${promos.map(p => `
+        <div class="promo-card ${p.active ? '' : 'inactive'}">
+          <div class="promo-info">
+            <div class="promo-code">
+              ${escapeHtml(p.code)}
+              <span class="status-pill ${p.active ? 'status-active' : 'status-inactive'}">
+                ${p.active ? 'Active' : 'Disabled'}
+              </span>
+            </div>
+            <div class="promo-discount">${describeDiscount(p)}</div>
+            <div class="promo-meta">${describeMeta(p)}</div>
+          </div>
+          <div class="promo-actions">
+            ${p.active
+              ? `<button class="btn btn-ghost" onclick="setActive('${p.id}', false)">Deactivate</button>`
+              : `<button class="btn btn-ghost" onclick="setActive('${p.id}', true)">Re-enable</button>`}
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function openModal() {
+  document.getElementById('promoForm').reset();
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('code').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+document.getElementById('promoForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Creating…';
+
+  const expiresInput = document.getElementById('expiresAt').value;
+  const expiresAtUnix = expiresInput
+    ? Math.floor(new Date(expiresInput + 'T23:59:59').getTime() / 1000)
+    : null;
+
+  const payload = {
+    code: document.getElementById('code').value.trim(),
+    discount_type: document.getElementById('discountType').value,
+    discount_value: parseFloat(document.getElementById('discountValue').value),
+    max_redemptions: parseInt(document.getElementById('maxRedemptions').value, 10) || null,
+    expires_at: expiresAtUnix,
+    minimum_amount_dollars: parseFloat(document.getElementById('minimumAmount').value) || null,
+    first_time_only: document.getElementById('firstTimeOnly').checked,
+  };
+
+  try {
+    const res = await fetch('/api/admin/promos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not create code');
+    toast('Promo code created');
+    closeModal();
+    loadPromos();
+  } catch (err) {
+    toast(err.message, true);
+  }
+  btn.disabled = false;
+  btn.textContent = 'Create Code';
+});
+
+async function setActive(id, active) {
+  try {
+    const res = await fetch(`/api/admin/promos/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active }),
+    });
+    if (!res.ok) throw new Error('Update failed');
+    toast(active ? 'Code re-enabled' : 'Code deactivated');
+    loadPromos();
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
+
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'modalOverlay') closeModal();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+loadPromos();
+</script>
+</body>
+</html>
