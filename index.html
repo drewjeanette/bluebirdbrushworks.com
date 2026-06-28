@@ -797,7 +797,8 @@ footer {
     </div>
     <div id="cartItems"><div class="cart-empty">Your cart is empty.<br><em>Find something beautiful above.</em></div></div>
     <div id="cartFooter" style="display:none;">
-      <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <div class="cart-total"><span>Subtotal</span><span id="cartTotal">$0.00</span></div>
+      <p id="shippingHint" style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.85rem;color:var(--muted);text-align:center;margin:0 0 0.7rem;"></p>
       <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
     </div>
   </div>
@@ -911,6 +912,15 @@ function updateCartUI() {
   const ie = document.getElementById('cartItems');
   const fe = document.getElementById('cartFooter');
   document.getElementById('cartTotal').textContent = '$'+total.toFixed(2);
+  const hint = document.getElementById('shippingHint');
+  if (total >= 50) {
+    hint.textContent = '✓ You\'ve unlocked free shipping!';
+    hint.style.color = 'var(--sage)';
+  } else {
+    const remaining = (50 - total).toFixed(2);
+    hint.textContent = `Add $${remaining} more for free shipping — otherwise $5 flat`;
+    hint.style.color = 'var(--muted)';
+  }
   if (!cart.length) {
     ie.innerHTML = '<div class="cart-empty">Your cart is empty.<br><em>Find something beautiful above.</em></div>';
     fe.style.display = 'none';

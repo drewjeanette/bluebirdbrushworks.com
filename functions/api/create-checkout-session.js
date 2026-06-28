@@ -9,6 +9,9 @@ const PRODUCTS = {
   6: { name: 'Songbird Gift Set',    price: 3400 },
 };
 
+const SHIPPING_FLAT_CENTS = 500;          // $5.00 flat shipping
+const FREE_SHIPPING_THRESHOLD = 5000;     // $50.00 — orders at/above this ship free
+
 export async function onRequestPost({ request, env }) {
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
     httpClient: Stripe.createFetchHttpClient(),
@@ -20,10 +23,12 @@ export async function onRequestPost({ request, env }) {
       return Response.json({ error: 'No items in cart' }, { status: 400 });
     }
 
+    let subtotal = 0;
     const line_items = items.map(({ id, qty }) => {
       const product = PRODUCTS[id];
       if (!product) throw new Error(`Unknown product: ${id}`);
       const quantity = Math.max(1, Math.min(99, parseInt(qty, 10) || 1));
+      subtotal += product.price * quantity;
       return {
         price_data: {
           currency: 'usd',
@@ -34,6 +39,12 @@ export async function onRequestPost({ request, env }) {
       };
     });
 
+    const qualifiesForFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+    const shippingAmount = qualifiesForFreeShipping ? 0 : SHIPPING_FLAT_CENTS;
+    const shippingLabel = qualifiesForFreeShipping
+      ? 'Free shipping (orders $50+)'
+      : 'Standard shipping (USPS First Class)';
+
     const url = new URL(request.url);
     const origin = `${url.protocol}//${url.host}`;
 
@@ -41,6 +52,18 @@ export async function onRequestPost({ request, env }) {
       mode: 'payment',
       line_items,
       shipping_address_collection: { allowed_countries: ['US', 'CA'] },
+      shipping_options: [{
+        shipping_rate_data: {
+          type: 'fixed_amount',
+          fixed_amount: { amount: shippingAmount, currency: 'usd' },
+          display_name: shippingLabel,
+          delivery_estimate: {
+            minimum: { unit: 'business_day', value: 3 },
+            maximum: { unit: 'business_day', value: 7 },
+          },
+        },
+      }],
+      allow_promotion_codes: true,
       success_url: `${origin}/?paid=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?canceled=true`,
     });
