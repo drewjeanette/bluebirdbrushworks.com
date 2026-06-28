@@ -296,6 +296,8 @@ nav {
   transition: transform 0.22s, box-shadow 0.22s; cursor: pointer;
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(44,63,80,0.11); }
+.card.sold-out { opacity: 0.72; }
+.card.sold-out .card-img img { filter: grayscale(0.4); }
 .card-img {
   width: 100%; aspect-ratio: 4/3;
   display: flex; align-items: center; justify-content: center;
@@ -877,81 +879,76 @@ function showPage(id) {
 }
 
 // ── PRODUCTS ──
-const products = [
-  { id:1, name:"Eastern Bluebird", desc:"On a winter branch, soft blues", price:6.50, tag:"Bestseller", bg1:"rgba(122,154,181,0.13)", bg2:"rgba(184,203,186,0.12)", birdCol:"#7A9AB5", bellyCol:"#C4A882" },
-  { id:2, name:"Wren in Morning Fog", desc:"Warm grey tones, quiet mood", price:6.50, tag:"New", bg1:"rgba(196,168,130,0.12)", bg2:"rgba(184,203,186,0.1)", birdCol:"#A89070", bellyCol:"#D6B89A" },
-  { id:3, name:"Chickadee on Holly", desc:"Winter berries, holiday warmth", price:6.50, tag:"Holiday", bg1:"rgba(214,169,138,0.1)", bg2:"rgba(122,154,181,0.08)", birdCol:"#5C7A9A", bellyCol:"#E8D0B8" },
-  { id:4, name:"Blue & Sage Wreath", desc:"Full botanical wreath", price:7.50, tag:"Popular", bg1:"rgba(143,166,139,0.14)", bg2:"rgba(122,154,181,0.09)", isWreath:true },
-  { id:5, name:"Finch & Wildflowers", desc:"Gold and sage, joyful", price:6.50, tag:null, bg1:"rgba(196,180,100,0.1)", bg2:"rgba(143,166,139,0.12)", birdCol:"#9AB070", bellyCol:"#E0CC80" },
-  { id:6, name:"Songbird Gift Set", desc:"One of each bird: 6 cards", price:34.00, tag:"Gift Set", bg1:"rgba(122,154,181,0.1)", bg2:"rgba(196,168,130,0.1)", isSet:true },
-];
+// Loaded dynamically from /api/products (D1 database, edited via admin panel)
+let products = [];
 
-function birdArt(c, b) {
+function placeholderArt() {
   return `<svg viewBox="0 0 100 90" width="88" height="78" xmlns="http://www.w3.org/2000/svg">
     <path d="M8 75 Q33 68 50 72 Q68 68 92 76" stroke="#C4B49A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
     <ellipse cx="30" cy="66" rx="9" ry="3.8" fill="rgba(143,166,139,0.6)" transform="rotate(-18 30 66)"/>
     <ellipse cx="72" cy="66" rx="9" ry="3.8" fill="rgba(143,166,139,0.6)" transform="rotate(18 72 66)"/>
     <circle cx="44" cy="63" r="3" fill="rgba(122,154,181,0.48)"/>
     <circle cx="58" cy="60" r="2.5" fill="rgba(122,154,181,0.4)"/>
-    <ellipse cx="50" cy="55" rx="16" ry="12" fill="${c}" opacity="0.84"/>
-    <path d="M38 52 Q43 44 55 47 Q51 57 38 59 Z" fill="${c}" opacity="0.74"/>
-    <ellipse cx="54" cy="61" rx="10" ry="8" fill="${b}" opacity="0.76"/>
-    <circle cx="62" cy="48" r="10" fill="${c}" opacity="0.88"/>
+    <ellipse cx="50" cy="55" rx="16" ry="12" fill="#7A9AB5" opacity="0.84"/>
+    <path d="M38 52 Q43 44 55 47 Q51 57 38 59 Z" fill="#7A9AB5" opacity="0.74"/>
+    <ellipse cx="54" cy="61" rx="10" ry="8" fill="#C4A882" opacity="0.76"/>
+    <circle cx="62" cy="48" r="10" fill="#7A9AB5" opacity="0.88"/>
     <circle cx="66" cy="46" r="3" fill="rgba(28,42,58,0.9)"/>
     <circle cx="66.8" cy="45.2" r="1.1" fill="white"/>
     <path d="M71 48 L78 49 L71 51 Z" fill="rgba(155,125,85,0.88)"/>
-    <path d="M34 58 Q24 65 21 73 Q30 67 36 62 Z" fill="${c}" opacity="0.7"/>
-  </svg>`;
-}
-
-function wreathArt() {
-  let petals = '';
-  for (let i=0; i<10; i++) {
-    const a = i * 36 * Math.PI/180;
-    const x = 50 + 28*Math.cos(a), y = 50 + 28*Math.sin(a);
-    petals += `<ellipse cx="${x}" cy="${y}" rx="9" ry="4" fill="rgba(143,166,139,0.65)" transform="rotate(${i*36+90} ${x} ${y})"/>`;
-  }
-  let dots = '';
-  for (let i=0; i<6; i++) {
-    const a = i * 60 * Math.PI/180;
-    const x = 50 + 28*Math.cos(a), y = 50 + 28*Math.sin(a);
-    dots += `<circle cx="${x}" cy="${y}" r="3.5" fill="rgba(122,154,181,0.52)"/>`;
-  }
-  return `<svg viewBox="0 0 100 100" width="82" height="82" xmlns="http://www.w3.org/2000/svg">${petals}${dots}</svg>`;
-}
-
-function setArt() {
-  return `<svg viewBox="0 0 110 80" width="96" height="72" xmlns="http://www.w3.org/2000/svg">
-    ${[['#7A9AB5','#C4A882',18,42],['#8FA68B','#B8CBBA',55,36],['#5C7A9A','#E8D0B8',92,42]].map(([c,b,x,y])=>`
-      <ellipse cx="${x}" cy="${y}" rx="12" ry="9" fill="${c}" opacity="0.8"/>
-      <ellipse cx="${x+2}" cy="${y+6}" rx="8" ry="6" fill="${b}" opacity="0.72"/>
-      <circle cx="${x+8}" cy="${y-6}" r="8" fill="${c}" opacity="0.86"/>
-      <path d="M${x+14} ${y-5} L${x+19} ${y-4} L${x+14} ${y-2} Z" fill="rgba(155,125,85,0.8)"/>
-    `).join('')}
+    <path d="M34 58 Q24 65 21 73 Q30 67 36 62 Z" fill="#7A9AB5" opacity="0.7"/>
   </svg>`;
 }
 
 function getArt(p) {
-  if (p.isSet) return setArt();
-  if (p.isWreath) return wreathArt();
-  return birdArt(p.birdCol, p.bellyCol);
+  if (p.image) return `<img src="${p.image}" alt="${escapeAttr(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"/>`;
+  return placeholderArt();
+}
+
+function escapeAttr(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
 }
 
 const badgeClass = { 'Bestseller':'badge-bestseller', 'New':'badge-new', 'Popular':'badge-popular', 'Holiday':'badge-holiday', 'Gift Set':'badge-gift-set' };
 
+async function loadProducts() {
+  try {
+    const res = await fetch('/api/products');
+    if (!res.ok) throw new Error('Could not load products');
+    products = await res.json();
+  } catch (err) {
+    console.error(err);
+    products = [];
+  }
+  renderProducts();
+  // Cart is loaded before products are available; reconcile prices/names now
+  cart = reconcileCart(cart);
+  updateCartUI();
+}
+
 function renderProducts() {
-  document.getElementById('productsGrid').innerHTML = products.map(p => `
-    <div class="card">
-      <div class="card-img" style="background: radial-gradient(ellipse at 40% 40%, ${p.bg1} 0%, transparent 65%), radial-gradient(ellipse at 70% 65%, ${p.bg2} 0%, transparent 55%), var(--parchment);">
-        ${p.tag ? `<div class="card-badge ${badgeClass[p.tag]||''}">${p.tag}</div>` : ''}
-        <div>${getArt(p)}</div>
+  const grid = document.getElementById('productsGrid');
+  if (!products.length) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);font-style:italic;">New cards coming soon — check back any time.</p>';
+    return;
+  }
+  grid.innerHTML = products.map(p => `
+    <div class="card${p.soldOut ? ' sold-out' : ''}">
+      <div class="card-img" style="background: var(--parchment);">
+        ${p.tag ? `<div class="card-badge ${badgeClass[p.tag]||''}">${escapeAttr(p.tag)}</div>` : ''}
+        ${p.soldOut ? `<div class="card-badge" style="background:rgba(192,57,43,0.9);color:white;left:0.7rem;right:auto;">Sold Out</div>` : ''}
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">${getArt(p)}</div>
       </div>
       <div class="card-body">
-        <div class="card-name">${p.name}</div>
-        <div class="card-desc">${p.desc}</div>
+        <div class="card-name">${escapeAttr(p.name)}</div>
+        <div class="card-desc">${escapeAttr(p.desc)}</div>
         <div class="card-footer">
           <span class="card-price">$${p.price.toFixed(2)}</span>
-          <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+          ${p.soldOut
+            ? `<button class="add-btn" disabled style="opacity:0.5;cursor:not-allowed;">Sold Out</button>`
+            : `<button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>`}
         </div>
       </div>
     </div>
@@ -963,18 +960,25 @@ const CART_STORAGE_KEY = 'bluebirdCart';
 let cart = loadCart();
 
 function loadCart() {
+  // Initial load returns minimal {id, qty} placeholders; full reconciliation
+  // against live product data happens once /api/products responds.
   try {
     const saved = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
-    // Rehydrate with current product data in case prices/names changed
-    return saved
-      .map(item => {
-        const p = products.find(x => x.id === item.id);
-        return p ? { ...p, qty: item.qty } : null;
-      })
-      .filter(Boolean);
+    return saved.map(i => ({ id: i.id, qty: i.qty, name: '', price: 0, image: null }));
   } catch {
     return [];
   }
+}
+
+function reconcileCart(items) {
+  return items
+    .map(item => {
+      const p = products.find(x => x.id === item.id);
+      // Drop items that no longer exist or are sold out
+      if (!p || p.soldOut) return null;
+      return { ...p, qty: item.qty };
+    })
+    .filter(Boolean);
 }
 
 function saveCart() {
@@ -1123,7 +1127,7 @@ async function submitForm(e) {
   }
 }
 
-renderProducts();
+loadProducts();
 updateCartUI();
 handleStripeReturn();
 </script>

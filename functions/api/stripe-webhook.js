@@ -10,7 +10,6 @@ export async function onRequestPost({ request, env }) {
 
   let stripeEvent;
   try {
-    // Workers crypto is async — must use constructEventAsync
     stripeEvent = await stripe.webhooks.constructEventAsync(
       body,
       sig,
@@ -23,17 +22,16 @@ export async function onRequestPost({ request, env }) {
 
   if (stripeEvent.type === 'checkout.session.completed') {
     const session = stripeEvent.data.object;
-
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
 
     const itemsList = lineItems.data
       .map(li => `${li.description} ×${li.quantity} — $${(li.amount_total / 100).toFixed(2)}`)
       .join('\n');
 
-    // Newer Stripe API nests shipping under collected_information; fall back to the old top-level field
     const ship = session.collected_information?.shipping_details || session.shipping_details || {};
     const addr = ship.address || {};
     const customerName = ship.name || session.customer_details?.name || '';
+    const customerEmail = session.customer_details?.email || '';
     const shippingAddress = [
       customerName,
       addr.line1,
@@ -42,6 +40,48 @@ export async function onRequestPost({ request, env }) {
       addr.country,
     ].filter(Boolean).join('\n');
 
+    // Record the order in D1 for stats (Phase 4 dashboard reads this)
+    if (env.DB) {
+      try {
+        const orderResult = await env.DB.prepare(
+          `INSERT OR IGNORE INTO orders
+           (stripe_session_id, amount_cents, customer_email, customer_name, shipping_address)
+           VALUES (?, ?, ?, ?, ?)`
+        ).bind(
+          session.id,
+          session.amount_total,
+          customerEmail,
+          customerName,
+          shippingAddress,
+        ).run();
+
+        const orderId = orderResult.meta.last_row_id;
+        if (orderId) {
+          // Map line item descriptions back to product ids by name
+          const { results: dbProducts } = await env.DB.prepare(
+            'SELECT id, name FROM products'
+          ).all();
+          const nameToId = new Map(dbProducts.map(p => [p.name, p.id]));
+
+          for (const li of lineItems.data) {
+            await env.DB.prepare(
+              `INSERT INTO order_items (order_id, product_id, product_name, qty, unit_price_cents)
+               VALUES (?, ?, ?, ?, ?)`
+            ).bind(
+              orderId,
+              nameToId.get(li.description) || null,
+              li.description,
+              li.quantity,
+              Math.round(li.amount_total / li.quantity),
+            ).run();
+          }
+        }
+      } catch (err) {
+        console.error('Failed to record order in D1:', err);
+      }
+    }
+
+    // Send the order confirmation email to the shop owner via Formspree
     if (env.FORMSPREE_ORDER_FORM_ID) {
       try {
         const formspreeRes = await fetch(`https://formspree.io/f/${env.FORMSPREE_ORDER_FORM_ID}`, {
@@ -54,7 +94,7 @@ export async function onRequestPost({ request, env }) {
           },
           body: JSON.stringify({
             _subject: `New Paid Order — $${(session.amount_total / 100).toFixed(2)}`,
-            customer_email: session.customer_details?.email,
+            customer_email: customerEmail,
             customer_name: customerName,
             shipping_address: shippingAddress,
             items: itemsList,

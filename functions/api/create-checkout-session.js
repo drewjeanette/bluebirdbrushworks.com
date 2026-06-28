@@ -1,14 +1,5 @@
 import Stripe from 'stripe';
 
-const PRODUCTS = {
-  1: { name: 'Eastern Bluebird',     price: 650 },
-  2: { name: 'Wren in Morning Fog',  price: 650 },
-  3: { name: 'Chickadee on Holly',   price: 650 },
-  4: { name: 'Blue & Sage Wreath',   price: 750 },
-  5: { name: 'Finch & Wildflowers',  price: 650 },
-  6: { name: 'Songbird Gift Set',    price: 3400 },
-};
-
 const SHIPPING_FLAT_CENTS = 500;          // $5.00 flat shipping
 const FREE_SHIPPING_THRESHOLD = 5000;     // $50.00 — orders at/above this ship free
 
@@ -23,17 +14,26 @@ export async function onRequestPost({ request, env }) {
       return Response.json({ error: 'No items in cart' }, { status: 400 });
     }
 
+    // Fetch live prices from D1 so customers can't tamper with amounts
+    const requestedIds = items.map(i => parseInt(i.id, 10)).filter(Boolean);
+    const placeholders = requestedIds.map(() => '?').join(',');
+    const { results: dbProducts } = await env.DB.prepare(
+      `SELECT id, name, price_cents, sold_out FROM products WHERE id IN (${placeholders})`
+    ).bind(...requestedIds).all();
+    const productMap = new Map(dbProducts.map(p => [p.id, p]));
+
     let subtotal = 0;
     const line_items = items.map(({ id, qty }) => {
-      const product = PRODUCTS[id];
-      if (!product) throw new Error(`Unknown product: ${id}`);
+      const product = productMap.get(parseInt(id, 10));
+      if (!product) throw new Error(`Product ${id} no longer available`);
+      if (product.sold_out) throw new Error(`${product.name} is sold out`);
       const quantity = Math.max(1, Math.min(99, parseInt(qty, 10) || 1));
-      subtotal += product.price * quantity;
+      subtotal += product.price_cents * quantity;
       return {
         price_data: {
           currency: 'usd',
           product_data: { name: product.name },
-          unit_amount: product.price,
+          unit_amount: product.price_cents,
         },
         quantity,
       };
