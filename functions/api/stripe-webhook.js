@@ -42,11 +42,13 @@ export async function onRequestPost({ request, env }) {
 
     if (env.FORMSPREE_ORDER_FORM_ID) {
       try {
-        await fetch(`https://formspree.io/f/${env.FORMSPREE_ORDER_FORM_ID}`, {
+        const formspreeRes = await fetch(`https://formspree.io/f/${env.FORMSPREE_ORDER_FORM_ID}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
+            'Origin': 'https://bluebirdbrushworks.com',
+            'Referer': 'https://bluebirdbrushworks.com/',
           },
           body: JSON.stringify({
             _subject: `New Paid Order — $${(session.amount_total / 100).toFixed(2)}`,
@@ -58,9 +60,16 @@ export async function onRequestPost({ request, env }) {
             stripe_session_id: session.id,
           }),
         });
+        const responseText = await formspreeRes.text();
+        console.log('Formspree response:', formspreeRes.status, responseText);
+        if (!formspreeRes.ok) {
+          console.error('Formspree rejected submission:', formspreeRes.status, responseText);
+        }
       } catch (err) {
         console.error('Failed to send order email:', err);
       }
+    } else {
+      console.error('FORMSPREE_ORDER_FORM_ID env var is not set');
     }
   }
 
