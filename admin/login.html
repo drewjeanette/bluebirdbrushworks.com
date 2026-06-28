@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Admin Login — Blue Bird Brushworks</title>
+<link rel="icon" type="image/png" href="/logo.PNG"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F7F2E8;
+  --parchment: #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate: #3D5A72;
+  --deep-slate: #2B3F52;
+  --muted: #7A8591;
+  --ink: #2C3E50;
+}
+body {
+  background: var(--cream);
+  font-family: 'Lato', sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.login-card {
+  background: white;
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 4px 24px rgba(44,63,80,0.08);
+  border: 1px solid rgba(196,168,130,0.2);
+}
+.login-logo {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1.3rem;
+  border: 3px solid white;
+  box-shadow: 0 2px 10px rgba(44,63,80,0.12);
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 400;
+  color: var(--deep-slate); text-align: center;
+  margin-bottom: 0.3rem;
+}
+.subtitle {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--dusty-blue);
+  text-align: center; margin-bottom: 1.8rem;
+}
+label {
+  display: block; font-size: 0.75rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 0.5rem;
+}
+input[type="password"] {
+  width: 100%; border: 1.5px solid var(--parchment);
+  border-radius: 8px; padding: 0.75rem 1rem;
+  font-family: 'Lato', sans-serif; font-size: 1rem;
+  background: var(--cream); color: var(--ink);
+  outline: none; transition: border-color 0.2s;
+}
+input:focus { border-color: var(--dusty-blue); background: white; }
+button {
+  width: 100%; margin-top: 1.2rem;
+  padding: 0.85rem; border: none; border-radius: 28px;
+  background: var(--dusty-blue); color: white;
+  font-family: 'Lato', sans-serif; font-size: 0.82rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.2s;
+}
+button:hover { background: var(--slate); }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.error {
+  color: #c0392b; font-size: 0.85rem;
+  margin-top: 0.8rem; text-align: center;
+  display: none;
+}
+.error.visible { display: block; }
+.back-link {
+  display: block; text-align: center; margin-top: 1.4rem;
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+}
+.back-link:hover { color: var(--slate); }
+</style>
+</head>
+<body>
+<div class="login-card">
+  <img src="/logo.PNG" alt="" class="login-logo"/>
+  <h1>Studio Access</h1>
+  <p class="subtitle">Blue Bird Brushworks</p>
+  <form id="loginForm">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" autocomplete="current-password" required autofocus/>
+    <button type="submit" id="submitBtn">Sign In</button>
+    <p class="error" id="errorMsg"></p>
+  </form>
+  <a href="/" class="back-link">← Back to site</a>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+const errorMsg = document.getElementById('errorMsg');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorMsg.classList.remove('visible');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Signing in…';
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: document.getElementById('password').value }),
+    });
+    if (res.ok) {
+      window.location.href = '/admin';
+    } else {
+      const data = await res.json().catch(() => ({}));
+      errorMsg.textContent = data.error || 'Login failed';
+      errorMsg.classList.add('visible');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+    }
+  } catch (err) {
+    errorMsg.textContent = 'Could not reach server. Try again.';
+    errorMsg.classList.add('visible');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+  }
+});
+</script>
+</body>
+</html>

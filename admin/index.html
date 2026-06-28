@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Studio Dashboard — Blue Bird Brushworks</title>
+<link rel="icon" type="image/png" href="/logo.PNG"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F7F2E8;
+  --parchment: #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate: #3D5A72;
+  --deep-slate: #2B3F52;
+  --sage: #8FA68B;
+  --soft-sage: #B8CBBA;
+  --warm-tan: #C4A882;
+  --muted: #7A8591;
+  --ink: #2C3E50;
+}
+body {
+  background: var(--cream);
+  font-family: 'Lato', sans-serif; font-weight: 300;
+  color: var(--ink);
+  min-height: 100vh;
+}
+.admin-nav {
+  background: white;
+  border-bottom: 1px solid rgba(196,168,130,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.6rem;
+}
+.admin-nav-left { display: flex; align-items: center; gap: 0.8rem; }
+.admin-nav-logo {
+  width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+}
+.admin-nav-title {
+  font-family: 'Playfair Display', serif; font-size: 1rem;
+  color: var(--deep-slate);
+}
+.logout-btn {
+  background: none; border: 1.5px solid var(--soft-sage);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--slate); cursor: pointer; font-family: 'Lato', sans-serif;
+  transition: border-color 0.2s, background 0.2s;
+}
+.logout-btn:hover { border-color: var(--dusty-blue); background: rgba(122,154,181,0.07); }
+.admin-main {
+  max-width: 1000px; margin: 0 auto;
+  padding: 3rem 1.6rem;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 400; color: var(--deep-slate);
+  margin-bottom: 0.4rem;
+}
+.lede {
+  font-size: 0.95rem; color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+.tile {
+  background: white;
+  border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 12px;
+  padding: 1.4rem 1.4rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  display: flex; flex-direction: column;
+}
+.tile.active:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(44,63,80,0.08); border-color: var(--dusty-blue); }
+.tile.disabled { opacity: 0.55; cursor: not-allowed; }
+.tile-eyebrow {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--dusty-blue); margin-bottom: 0.5rem;
+}
+.tile.disabled .tile-eyebrow { color: var(--muted); }
+.tile-title {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem;
+  color: var(--deep-slate); margin-bottom: 0.4rem;
+}
+.tile-desc {
+  font-size: 0.88rem; color: var(--muted); line-height: 1.5;
+}
+.status-banner {
+  background: rgba(143,166,139,0.15);
+  border-left: 3px solid var(--sage);
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  margin-bottom: 2.5rem;
+  font-size: 0.9rem; color: var(--slate);
+}
+.status-banner strong { color: var(--deep-slate); }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="admin-nav-left">
+    <img src="/logo.PNG" alt="" class="admin-nav-logo"/>
+    <div class="admin-nav-title">Studio Dashboard</div>
+  </div>
+  <button class="logout-btn" onclick="logout()">Sign Out</button>
+</nav>
+
+<main class="admin-main">
+  <h1>Welcome back</h1>
+  <p class="lede">Manage your shop, your site, and everything in between.</p>
+
+  <div class="status-banner">
+    <strong>Setup in progress.</strong> Login & dashboard are live. Product editor, content editor, and stats are coming next.
+  </div>
+
+  <div class="card-grid">
+    <div class="tile disabled">
+      <div class="tile-eyebrow">Coming soon</div>
+      <div class="tile-title">Products</div>
+      <div class="tile-desc">Add new cards, update prices, upload artwork, mark items as sold out.</div>
+    </div>
+    <div class="tile disabled">
+      <div class="tile-eyebrow">Coming soon</div>
+      <div class="tile-title">Content & Photos</div>
+      <div class="tile-desc">Edit every word and image on the site — hero, story, footer, about photo.</div>
+    </div>
+    <div class="tile disabled">
+      <div class="tile-eyebrow">Coming soon</div>
+      <div class="tile-title">Stats & Orders</div>
+      <div class="tile-desc">Visits, sales, revenue, and a ranked list of your most popular cards.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  window.location.href = '/admin/login';
+}
+</script>
+</body>
+</html>
