@@ -625,7 +625,7 @@ footer {
 
     <!-- Central logo image -->
     <div class="hero-logo-wrap">
-      <img src="logo.PNG" alt="Blue Bird Brushworks logo" class="logo-illustration"/>
+      <img src="logo.PNG" alt="Blue Bird Brushworks logo" class="logo-illustration" data-content-image="logo_image"/>
     </div>
     <template>
       <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
@@ -694,11 +694,11 @@ footer {
     <div class="hero-text-card">
       <!-- Brand name -->
       <div class="hero-brand">
-        <div class="hero-brand-main">Blue Bird Brushworks</div>
-        <div class="hero-brand-sub">Watercolor Card Company</div>
+        <div class="hero-brand-main" data-content="hero_brand_main">Blue Bird Brushworks</div>
+        <div class="hero-brand-sub" data-content="hero_brand_sub">Watercolor Card Company</div>
       </div>
 
-      <p class="hero-tagline">Hand-painted with love, printed with care</p>
+      <p class="hero-tagline" data-content="hero_tagline">Hand-painted with love, printed with care</p>
 
       <div class="hero-divider">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
@@ -717,16 +717,16 @@ footer {
   <section class="story-band">
     <div class="story-inner">
       <div class="story-visual">
-        <img src="aboutMe.JPG" alt="Portrait of the artist behind Blue Bird Brushworks" class="about-photo"/>
+        <img src="aboutMe.JPG" alt="Portrait of the artist behind Blue Bird Brushworks" class="about-photo" data-content-image="about_photo_image"/>
       </div>
 
       <div class="story-text">
         <p class="page-eyebrow" style="text-align:left;">Our Story</p>
-        <h2 class="story-title">Watercolors that<br><em>feel like home</em></h2>
-        <p class="story-body">
+        <h2 class="story-title" data-content-html="story_title_html">Watercolors that<br><em>feel like home</em></h2>
+        <p class="story-body" data-content="story_body_1">
           Hi, my name is Anna Jeanette! I'm the heart behind Blue Bird Brushworks. It all started at a kitchen table with a small set of paints and a deep love for birds. Every card in our collection is an original watercolor that began with slow mornings, soft light, and the particular quiet of painting something delicate.
         </p>
-        <p class="story-body">
+        <p class="story-body" data-content="story_body_2">
           Every card is an original one of a kind watercolor painting. Each purchase comes with an envelope so your card is ready to gift the moment it arrives.
         </p>
         <a href="#" class="btn-primary" onclick="showPage('shop')">Shop All Cards</a>
@@ -734,29 +734,29 @@ footer {
     </div>
   </section>
 
-  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Cookeville, TN &nbsp;·&nbsp; Made with watercolors & warmth &nbsp;·&nbsp; Background image via <a href="https://easy-peasy.ai" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline;">Easy-Peasy.AI</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; Background image via <a href="https://easy-peasy.ai" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline;">Easy-Peasy.AI</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 <!-- ══ SHOP PAGE ══ -->
 <div id="page-shop" class="page">
   <div class="shop-section">
     <div class="page-header">
-      <div class="page-eyebrow">The Collection</div>
-      <h1 class="page-title">Shop All Art</h1>
-      <p class="page-sub">Each card begins as an original watercolor painting, printed on thick textured paper.</p>
+      <div class="page-eyebrow" data-content="shop_eyebrow">The Collection</div>
+      <h1 class="page-title" data-content="shop_title">Shop All Art</h1>
+      <p class="page-sub" data-content="shop_subtitle">Each card begins as an original watercolor painting, printed on thick textured paper.</p>
     </div>
     <div class="cards-grid" id="productsGrid"></div>
   </div>
-  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Cookeville, TN &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 <!-- ══ CUSTOM REQUEST PAGE ══ -->
 <div id="page-custom" class="page">
   <div class="custom-section">
     <div class="page-header">
-      <div class="page-eyebrow">Commission</div>
-      <h1 class="page-title">Request Custom Art</h1>
-      <p class="page-sub">Tell me what you're dreaming of and I'll paint it just for you.</p>
+      <div class="page-eyebrow" data-content="custom_eyebrow">Commission</div>
+      <h1 class="page-title" data-content="custom_title">Request Custom Art</h1>
+      <p class="page-sub" data-content="custom_subtitle">Tell me what you're dreaming of and I'll paint it just for you.</p>
     </div>
 
     <div class="form-card">
@@ -830,7 +830,7 @@ footer {
       </div>
     </div>
   </div>
-  <footer>© 2026 Blue Bird Brushworks &nbsp;·&nbsp; Cookeville, TN &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 </main>
@@ -1127,6 +1127,51 @@ async function submitForm(e) {
   }
 }
 
+// ── CONTENT (editable text & images from the admin panel) ──
+async function loadContent() {
+  let content;
+  try {
+    const res = await fetch('/api/content');
+    if (!res.ok) return;
+    content = await res.json();
+  } catch {
+    return; // Site shows baked-in HTML defaults on failure
+  }
+  if (!content || typeof content !== 'object') return;
+
+  // Plain text: set textContent (preserves user-typed line breaks safely)
+  document.querySelectorAll('[data-content]').forEach(el => {
+    const key = el.dataset.content;
+    if (content[key] != null) el.textContent = content[key];
+  });
+
+  // HTML-allowed content (e.g., story_title_html with <br> and <em>)
+  document.querySelectorAll('[data-content-html]').forEach(el => {
+    const key = el.dataset.contentHtml;
+    if (content[key] != null) el.innerHTML = content[key];
+  });
+
+  // Image swaps
+  document.querySelectorAll('[data-content-image]').forEach(el => {
+    const key = el.dataset.contentImage;
+    if (content[key]) el.src = content[key];
+  });
+
+  // Hero background (CSS background-image, not a regular img)
+  if (content.hero_bg_image) {
+    const hero = document.querySelector('.hero');
+    if (hero) hero.style.backgroundImage = `url('${content.hero_bg_image}')`;
+  }
+
+  // Favicon swap when the logo changes
+  if (content.logo_image) {
+    document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(l => {
+      l.href = content.logo_image;
+    });
+  }
+}
+
+loadContent();
 loadProducts();
 updateCartUI();
 handleStripeReturn();

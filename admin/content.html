@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Content & Photos — Studio Dashboard</title>
+<link rel="icon" type="image/png" href="/logo.PNG"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F7F2E8;
+  --parchment: #EDE5D4;
+  --dusty-blue: #7A9AB5;
+  --slate: #3D5A72;
+  --deep-slate: #2B3F52;
+  --sage: #8FA68B;
+  --soft-sage: #B8CBBA;
+  --warm-tan: #C4A882;
+  --muted: #7A8591;
+  --ink: #2C3E50;
+}
+body { background: var(--cream); font-family: 'Lato', sans-serif; font-weight: 300; color: var(--ink); min-height: 100vh; }
+img { max-width: 100%; height: auto; display: block; }
+
+.admin-nav {
+  background: white; border-bottom: 1px solid rgba(196,168,130,0.3);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.6rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.admin-nav-left { display: flex; align-items: center; gap: 0.8rem; }
+.admin-nav-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.admin-nav-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--deep-slate); }
+.admin-nav-right { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.nav-link {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+}
+.nav-link:hover { color: var(--slate); }
+.nav-link.active { color: var(--slate); }
+.logout-btn {
+  background: none; border: 1.5px solid var(--soft-sage);
+  border-radius: 20px; padding: 0.35rem 1rem;
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--slate); cursor: pointer; font-family: 'Lato', sans-serif;
+}
+
+.admin-main { max-width: 780px; margin: 0 auto; padding: 2.4rem 1.6rem 5rem; }
+.page-header { margin-bottom: 2rem; }
+h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 400; color: var(--deep-slate); }
+.lede { font-size: 0.92rem; color: var(--muted); margin-top: 0.3rem; }
+
+.section {
+  background: white; border: 1px solid rgba(196,168,130,0.25);
+  border-radius: 12px; padding: 1.6rem 1.6rem 1.2rem;
+  margin-bottom: 1.4rem;
+}
+.section-title {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem;
+  color: var(--deep-slate); margin-bottom: 0.3rem;
+}
+.section-sub {
+  font-size: 0.82rem; color: var(--muted); margin-bottom: 1.2rem;
+}
+
+.field { margin-bottom: 1.1rem; }
+.field:last-child { margin-bottom: 0; }
+label {
+  display: block; font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--slate); margin-bottom: 0.4rem;
+}
+.field-hint {
+  font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem;
+  font-style: italic;
+}
+input[type="text"], textarea {
+  width: 100%; border: 1.5px solid var(--parchment);
+  border-radius: 7px; padding: 0.6rem 0.85rem;
+  font-family: 'Lato', sans-serif; font-size: 0.95rem;
+  background: var(--cream); color: var(--ink); outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, textarea:focus { border-color: var(--dusty-blue); background: white; }
+textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+.image-field { display: flex; gap: 1rem; align-items: flex-start; }
+.image-thumb {
+  width: 110px; height: 110px; border-radius: 8px;
+  background: var(--parchment);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.image-thumb-empty { font-size: 0.72rem; color: var(--muted); font-style: italic; text-align: center; padding: 0 0.5rem; }
+.image-controls { flex: 1; }
+.upload-label {
+  display: inline-block; padding: 0.4rem 1rem;
+  background: var(--dusty-blue); color: white;
+  border-radius: 18px; cursor: pointer;
+  font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.upload-label:hover { background: var(--slate); }
+input[type="file"] { display: none; }
+
+.save-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1px solid rgba(196,168,130,0.3);
+  padding: 0.9rem 1.6rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  box-shadow: 0 -2px 12px rgba(44,63,80,0.05);
+  z-index: 50;
+}
+.save-bar-text { font-size: 0.85rem; color: var(--muted); }
+.save-bar-text.dirty { color: var(--warm-tan); font-weight: 700; }
+.btn {
+  background: var(--dusty-blue); color: white;
+  border: none; border-radius: 22px;
+  padding: 0.7rem 1.6rem; font-size: 0.78rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Lato', sans-serif;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--slate); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.toast {
+  position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%);
+  background: var(--deep-slate); color: white;
+  padding: 0.7rem 1.4rem; border-radius: 24px;
+  font-size: 0.85rem; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+  z-index: 200;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: #c0392b; }
+
+.skeleton { color: var(--muted); text-align: center; padding: 3rem; font-style: italic; }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="admin-nav-left">
+    <img src="/logo.PNG" alt="" class="admin-nav-logo"/>
+    <div class="admin-nav-title">Studio Dashboard</div>
+  </div>
+  <div class="admin-nav-right">
+    <a href="/admin" class="nav-link">Home</a>
+    <a href="/admin/products" class="nav-link">Products</a>
+    <a href="/admin/content" class="nav-link active">Content</a>
+    <a href="/" class="nav-link" target="_blank">View Site →</a>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<main class="admin-main">
+  <div class="page-header">
+    <h1>Content & Photos</h1>
+    <p class="lede">Edit any text or photo on the site. Changes go live as soon as you save.</p>
+  </div>
+
+  <div id="formContent">
+    <p class="skeleton">Loading…</p>
+  </div>
+</main>
+
+<div class="save-bar">
+  <div class="save-bar-text" id="saveStatus">All changes saved</div>
+  <button class="btn" id="saveBtn" onclick="saveAll()" disabled>Save Changes</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Schema defines which fields exist, how to render them, and which section they belong to.
+const SCHEMA = [
+  {
+    section: 'Hero (Top of Homepage)',
+    sub: 'The big title and tagline visitors see first.',
+    fields: [
+      { key: 'logo_image',      label: 'Logo',                type: 'image' },
+      { key: 'hero_bg_image',   label: 'Background photo',    type: 'image' },
+      { key: 'hero_brand_main', label: 'Brand name (large)',  type: 'text' },
+      { key: 'hero_brand_sub',  label: 'Subtitle (small caps)', type: 'text' },
+      { key: 'hero_tagline',    label: 'Tagline',             type: 'text' },
+    ],
+  },
+  {
+    section: 'Story (Middle of Homepage)',
+    sub: 'The "About / Our Story" block with your photo.',
+    fields: [
+      { key: 'about_photo_image', label: 'About photo',        type: 'image' },
+      { key: 'story_title_html',  label: 'Title (HTML allowed)', type: 'textarea',
+        hint: 'Use <br> for a line break and <em>text</em> for italic.' },
+      { key: 'story_body_1',      label: 'First paragraph',     type: 'textarea' },
+      { key: 'story_body_2',      label: 'Second paragraph',    type: 'textarea' },
+    ],
+  },
+  {
+    section: 'Shop Page Header',
+    sub: 'Shown above the grid of cards on the shop page.',
+    fields: [
+      { key: 'shop_eyebrow',  label: 'Eyebrow (small caps)', type: 'text' },
+      { key: 'shop_title',    label: 'Title',                type: 'text' },
+      { key: 'shop_subtitle', label: 'Subtitle',             type: 'text' },
+    ],
+  },
+  {
+    section: 'Custom Request Page Header',
+    sub: 'Shown above the commission form.',
+    fields: [
+      { key: 'custom_eyebrow',  label: 'Eyebrow (small caps)', type: 'text' },
+      { key: 'custom_title',    label: 'Title',                type: 'text' },
+      { key: 'custom_subtitle', label: 'Subtitle',             type: 'text' },
+    ],
+  },
+  {
+    section: 'Footer',
+    sub: 'Appears at the bottom of every page.',
+    fields: [
+      { key: 'footer_text', label: 'Footer text', type: 'textarea',
+        hint: 'The "admin" link is added automatically and not part of this text.' },
+    ],
+  },
+];
+
+let original = {};
+let current = {};
+
+async function logout() {
+  await fetch('/api/admin/logout', { method: 'POST' });
+  window.location.href = '/admin/login';
+}
+
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('error', isError);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function escapeAttr(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function isDirty() {
+  return Object.keys(current).some(k => current[k] !== (original[k] ?? ''))
+      || Object.keys(original).some(k => current[k] !== original[k]);
+}
+
+function refreshDirtyState() {
+  const status = document.getElementById('saveStatus');
+  const btn = document.getElementById('saveBtn');
+  if (isDirty()) {
+    status.textContent = 'Unsaved changes';
+    status.classList.add('dirty');
+    btn.disabled = false;
+  } else {
+    status.textContent = 'All changes saved';
+    status.classList.remove('dirty');
+    btn.disabled = true;
+  }
+}
+
+function renderField(field) {
+  const value = current[field.key] ?? '';
+  const hint = field.hint ? `<p class="field-hint">${field.hint}</p>` : '';
+
+  if (field.type === 'text') {
+    return `
+      <div class="field">
+        <label for="f-${field.key}">${field.label}</label>
+        <input type="text" id="f-${field.key}" data-key="${field.key}" value="${escapeAttr(value)}"/>
+        ${hint}
+      </div>`;
+  }
+
+  if (field.type === 'textarea') {
+    return `
+      <div class="field">
+        <label for="f-${field.key}">${field.label}</label>
+        <textarea id="f-${field.key}" data-key="${field.key}">${escapeAttr(value)}</textarea>
+        ${hint}
+      </div>`;
+  }
+
+  if (field.type === 'image') {
+    return `
+      <div class="field">
+        <label>${field.label}</label>
+        <div class="image-field">
+          <div class="image-thumb" id="thumb-${field.key}">
+            ${value
+              ? `<img src="${escapeAttr(value)}" alt=""/>`
+              : `<div class="image-thumb-empty">No image yet</div>`}
+          </div>
+          <div class="image-controls">
+            <label class="upload-label" for="upload-${field.key}">Replace photo</label>
+            <input type="file" id="upload-${field.key}" data-key="${field.key}"
+                   accept="image/jpeg,image/png,image/webp,image/gif"/>
+            <p class="field-hint">JPG, PNG, WebP, or GIF · 5 MB max</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  return '';
+}
+
+function renderForm() {
+  const container = document.getElementById('formContent');
+  container.innerHTML = SCHEMA.map(section => `
+    <div class="section">
+      <div class="section-title">${section.section}</div>
+      <div class="section-sub">${section.sub}</div>
+      ${section.fields.map(renderField).join('')}
+    </div>
+  `).join('');
+
+  container.querySelectorAll('input[type="text"], textarea').forEach(el => {
+    el.addEventListener('input', () => {
+      current[el.dataset.key] = el.value;
+      refreshDirtyState();
+    });
+  });
+
+  container.querySelectorAll('input[type="file"]').forEach(el => {
+    el.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        toast('Image must be 5 MB or smaller', true);
+        e.target.value = '';
+        return;
+      }
+      const key = el.dataset.key;
+      const thumb = document.getElementById('thumb-' + key);
+      thumb.innerHTML = '<div class="image-thumb-empty">Uploading…</div>';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        current[key] = data.url;
+        thumb.innerHTML = `<img src="${data.url}" alt=""/>`;
+        toast('Photo uploaded — remember to save');
+        refreshDirtyState();
+      } catch (err) {
+        toast(err.message, true);
+        const oldVal = current[key];
+        thumb.innerHTML = oldVal
+          ? `<img src="${escapeAttr(oldVal)}" alt=""/>`
+          : '<div class="image-thumb-empty">No image yet</div>';
+      }
+      e.target.value = '';
+    });
+  });
+}
+
+async function loadContent() {
+  try {
+    const res = await fetch('/api/admin/content');
+    if (res.status === 401) { window.location.href = '/admin/login'; return; }
+    const data = await res.json();
+    original = { ...data };
+    current = { ...data };
+    renderForm();
+    refreshDirtyState();
+  } catch (err) {
+    document.getElementById('formContent').innerHTML =
+      '<p class="skeleton" style="color:#c0392b;">Could not load content. Refresh and try again.</p>';
+  }
+}
+
+async function saveAll() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    // Only send fields that actually changed
+    const changes = {};
+    for (const key of new Set([...Object.keys(current), ...Object.keys(original)])) {
+      if ((current[key] ?? '') !== (original[key] ?? '')) changes[key] = current[key] ?? '';
+    }
+    const res = await fetch('/api/admin/content', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(changes),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Save failed');
+    original = { ...current };
+    toast('Changes saved');
+    refreshDirtyState();
+  } catch (err) {
+    toast(err.message, true);
+  }
+  btn.textContent = 'Save Changes';
+  refreshDirtyState();
+}
+
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', (e) => {
+  if (isDirty()) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+loadContent();
+</script>
+</body>
+</html>
