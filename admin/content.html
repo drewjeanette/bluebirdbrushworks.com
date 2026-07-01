@@ -175,6 +175,7 @@ input[type="file"] { display: none; }
 
 <div class="toast" id="toast"></div>
 
+<script src="/admin/image-resize.js"></script>
 <script>
 // Schema defines which fields exist, how to render them, and which section they belong to.
 const SCHEMA = [
@@ -342,11 +343,13 @@ function renderForm() {
       }
       const key = el.dataset.key;
       const thumb = document.getElementById('thumb-' + key);
-      thumb.innerHTML = '<div class="image-thumb-empty">Uploading…</div>';
+      thumb.innerHTML = '<div class="image-thumb-empty">Resizing…</div>';
 
       try {
+        const resized = await resizeImageFile(file);
+        thumb.innerHTML = '<div class="image-thumb-empty">Uploading…</div>';
         const fd = new FormData();
-        fd.append('file', file);
+        fd.append('file', resized);
         const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Upload failed');

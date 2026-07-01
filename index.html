@@ -543,6 +543,33 @@ select { cursor: pointer; }
   display: none;
 }
 
+/* ── PRODUCT DETAIL MODAL ── */
+.detail-modal { max-width: 640px; padding: 1.6rem 1.6rem 2rem; }
+.detail-gallery-main {
+  width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
+  background: var(--parchment); display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.7rem;
+}
+.detail-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.detail-gallery-thumbs { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; }
+.detail-thumb {
+  width: 64px; height: 64px; border-radius: 8px; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; background: var(--parchment); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.detail-thumb.active { border-color: var(--dusty-blue); }
+.detail-body h2 {
+  font-family: 'Playfair Display', serif; font-weight: 400; font-size: 1.5rem;
+  color: var(--deep-slate); margin-bottom: 0.5rem;
+}
+.detail-body p {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 1rem; color: var(--muted); margin-bottom: 1.3rem; line-height: 1.5;
+}
+.detail-footer { display: flex; align-items: center; justify-content: space-between; }
+.detail-price { font-size: 1.3rem; color: var(--slate); font-weight: 700; }
+
 /* ── FOOTER STRIP ── */
 footer {
   background: var(--parchment);
@@ -734,7 +761,7 @@ footer {
     </div>
   </section>
 
-  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; Background image via <a href="https://easy-peasy.ai" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline;">Easy-Peasy.AI</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; Background image via <a href="https://easy-peasy.ai" target="_blank" rel="noopener noreferrer" style="color:var(--muted);text-decoration:underline;">Easy-Peasy.AI</a> &nbsp;·&nbsp; <a href="/shipping.html" style="color:var(--muted);text-decoration:none;">Shipping</a> &nbsp;·&nbsp; <a href="/returns.html" style="color:var(--muted);text-decoration:none;">Returns</a> &nbsp;·&nbsp; <a href="/privacy.html" style="color:var(--muted);text-decoration:none;">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html" style="color:var(--muted);text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 <!-- ══ SHOP PAGE ══ -->
@@ -747,7 +774,7 @@ footer {
     </div>
     <div class="cards-grid" id="productsGrid"></div>
   </div>
-  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/shipping.html" style="color:var(--muted);text-decoration:none;">Shipping</a> &nbsp;·&nbsp; <a href="/returns.html" style="color:var(--muted);text-decoration:none;">Returns</a> &nbsp;·&nbsp; <a href="/privacy.html" style="color:var(--muted);text-decoration:none;">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html" style="color:var(--muted);text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 <!-- ══ CUSTOM REQUEST PAGE ══ -->
@@ -830,7 +857,7 @@ footer {
       </div>
     </div>
   </div>
-  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
+  <footer><span data-content="footer_text">© 2026 Blue Bird Brushworks · Cookeville, TN · Made with watercolors & warmth</span> &nbsp;·&nbsp; <a href="/shipping.html" style="color:var(--muted);text-decoration:none;">Shipping</a> &nbsp;·&nbsp; <a href="/returns.html" style="color:var(--muted);text-decoration:none;">Returns</a> &nbsp;·&nbsp; <a href="/privacy.html" style="color:var(--muted);text-decoration:none;">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html" style="color:var(--muted);text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="/admin" style="color:var(--muted);text-decoration:none;opacity:0.7;">admin</a></footer>
 </div>
 
 </main>
@@ -849,6 +876,26 @@ footer {
         Thank you! I'll be in touch soon with shipping details.
       </p>
       <button class="btn-primary" onclick="closeCheckout()">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="checkout-overlay" id="detailOverlay" onclick="if(event.target===this) closeProductDetail()">
+  <div class="checkout-modal detail-modal" role="dialog" aria-modal="true" aria-label="Card details">
+    <button class="checkout-close" onclick="closeProductDetail()" aria-label="Close">×</button>
+    <div class="detail-gallery">
+      <div class="detail-gallery-main" id="detailGalleryMain"></div>
+      <div class="detail-gallery-thumbs" id="detailGalleryThumbs"></div>
+    </div>
+    <div class="detail-body">
+      <div id="detailBadge"></div>
+      <h2 id="detailName"></h2>
+      <p id="detailDesc"></p>
+      <div class="detail-footer">
+        <span class="detail-price" id="detailPrice"></span>
+        <button class="add-btn" id="detailAddBtn"></button>
+      </div>
     </div>
   </div>
 </div>
@@ -935,7 +982,7 @@ function renderProducts() {
     return;
   }
   grid.innerHTML = products.map(p => `
-    <div class="card${p.soldOut ? ' sold-out' : ''}">
+    <div class="card${p.soldOut ? ' sold-out' : ''}" onclick="openProductDetail(${p.id})">
       <div class="card-img" style="background: var(--parchment);">
         ${p.tag ? `<div class="card-badge ${badgeClass[p.tag]||''}">${escapeAttr(p.tag)}</div>` : ''}
         ${p.soldOut ? `<div class="card-badge" style="background:rgba(192,57,43,0.9);color:white;left:0.7rem;right:auto;">Sold Out</div>` : ''}
@@ -948,11 +995,64 @@ function renderProducts() {
           <span class="card-price">$${p.price.toFixed(2)}</span>
           ${p.soldOut
             ? `<button class="add-btn" disabled style="opacity:0.5;cursor:not-allowed;">Sold Out</button>`
-            : `<button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>`}
+            : `<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">Add to Cart</button>`}
         </div>
       </div>
     </div>
   `).join('');
+}
+
+// ── PRODUCT DETAIL MODAL ──
+let detailImages = [];
+
+function openProductDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  detailImages = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+
+  document.getElementById('detailBadge').innerHTML = p.tag
+    ? `<div class="card-badge ${badgeClass[p.tag]||''}" style="position:static;display:inline-block;margin-bottom:0.6rem;">${escapeAttr(p.tag)}</div>` : '';
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailDesc').textContent = p.desc;
+  document.getElementById('detailPrice').textContent = '$' + p.price.toFixed(2);
+
+  const addBtn = document.getElementById('detailAddBtn');
+  if (p.soldOut) {
+    addBtn.textContent = 'Sold Out';
+    addBtn.disabled = true;
+    addBtn.style.opacity = '0.5';
+    addBtn.style.cursor = 'not-allowed';
+    addBtn.onclick = null;
+  } else {
+    addBtn.textContent = 'Add to Cart';
+    addBtn.disabled = false;
+    addBtn.style.opacity = '';
+    addBtn.style.cursor = 'pointer';
+    addBtn.onclick = () => addToCart(p.id);
+  }
+
+  const thumbs = document.getElementById('detailGalleryThumbs');
+  thumbs.style.display = detailImages.length > 1 ? 'flex' : 'none';
+  thumbs.innerHTML = detailImages.map((src, i) => `
+    <div class="detail-thumb${i === 0 ? ' active' : ''}" onclick="setDetailImage(${i})">
+      <img src="${src}" alt="" loading="lazy"/>
+    </div>
+  `).join('');
+  setDetailImage(0);
+
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function setDetailImage(i) {
+  const main = document.getElementById('detailGalleryMain');
+  main.innerHTML = detailImages[i]
+    ? `<img src="${detailImages[i]}" alt=""/>`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">${placeholderArt()}</div>`;
+  document.querySelectorAll('.detail-thumb').forEach((el, idx) => el.classList.toggle('active', idx === i));
+}
+
+function closeProductDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
 }
 
 // ── CART ──
@@ -1097,7 +1197,7 @@ function handleStripeReturn() {
   }
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeCheckout(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeCheckout(); closeProductDetail(); } });
 
 // ── FORM ──
 async function submitForm(e) {

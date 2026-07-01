@@ -107,7 +107,7 @@ h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 400; 
 .modal-overlay.open { display: flex; }
 .modal {
   background: var(--cream); border-radius: 12px;
-  width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+  width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto;
   padding: 1.8rem 1.8rem 2rem;
   position: relative;
 }
@@ -138,14 +138,22 @@ textarea { resize: vertical; min-height: 70px; }
 .checkbox-row input[type="checkbox"] { width: 1.1rem; height: 1.1rem; cursor: pointer; }
 .checkbox-row label { margin-bottom: 0; cursor: pointer; }
 
+.photo-slots {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem;
+}
 .image-uploader {
   border: 2px dashed var(--soft-sage); border-radius: 8px;
-  padding: 1rem; text-align: center;
+  padding: 0.8rem 0.6rem; text-align: center;
   background: white;
 }
 .image-preview {
-  max-width: 100%; max-height: 180px;
-  border-radius: 6px; margin: 0 auto 0.7rem;
+  max-width: 100%; max-height: 110px; width: 100%; object-fit: cover;
+  border-radius: 6px; margin: 0 auto 0.6rem; display: block;
+}
+.remove-photo-btn {
+  display: block; margin: 0.5rem auto 0; background: none; border: none;
+  color: #c0392b; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; font-family: 'Lato', sans-serif;
 }
 .upload-label {
   display: inline-block; padding: 0.4rem 1rem;
@@ -211,17 +219,39 @@ input[type="file"] { display: none; }
     <h2 id="modalTitle">New Product</h2>
     <form id="productForm">
       <input type="hidden" id="productId"/>
-      <input type="hidden" id="productImageKey"/>
 
       <div class="form-group">
-        <label>Photo</label>
-        <div class="image-uploader">
-          <img id="imagePreview" class="image-preview" style="display:none;" alt="Preview"/>
-          <div id="noImageText" class="upload-hint" style="margin-bottom:0.5rem;">No photo yet</div>
-          <label class="upload-label" for="imageFile" id="uploadBtn">Choose photo</label>
-          <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp,image/gif"/>
-          <p class="upload-hint">JPG, PNG, WebP, or GIF · 5 MB max</p>
+        <label>Photos <span style="text-transform:none;letter-spacing:normal;font-weight:400;">(up to 3 — customers can click a card to view all of them)</span></label>
+        <div class="photo-slots">
+          <div class="photo-slot" data-slot="0">
+            <div class="image-uploader">
+              <img class="image-preview" style="display:none;" alt="Preview"/>
+              <div class="no-image-text upload-hint" style="margin-bottom:0.5rem;">Main photo</div>
+              <label class="upload-label" for="imageFile0">Choose photo</label>
+              <input type="file" class="image-file" id="imageFile0" accept="image/jpeg,image/png,image/webp,image/gif"/>
+              <button type="button" class="remove-photo-btn" style="display:none;">Remove</button>
+            </div>
+          </div>
+          <div class="photo-slot" data-slot="1">
+            <div class="image-uploader">
+              <img class="image-preview" style="display:none;" alt="Preview"/>
+              <div class="no-image-text upload-hint" style="margin-bottom:0.5rem;">Photo 2 (optional)</div>
+              <label class="upload-label" for="imageFile1">Choose photo</label>
+              <input type="file" class="image-file" id="imageFile1" accept="image/jpeg,image/png,image/webp,image/gif"/>
+              <button type="button" class="remove-photo-btn" style="display:none;">Remove</button>
+            </div>
+          </div>
+          <div class="photo-slot" data-slot="2">
+            <div class="image-uploader">
+              <img class="image-preview" style="display:none;" alt="Preview"/>
+              <div class="no-image-text upload-hint" style="margin-bottom:0.5rem;">Photo 3 (optional)</div>
+              <label class="upload-label" for="imageFile2">Choose photo</label>
+              <input type="file" class="image-file" id="imageFile2" accept="image/jpeg,image/png,image/webp,image/gif"/>
+              <button type="button" class="remove-photo-btn" style="display:none;">Remove</button>
+            </div>
+          </div>
         </div>
+        <p class="upload-hint">JPG, PNG, WebP, or GIF · 5 MB max · resized automatically</p>
       </div>
 
       <div class="form-group">
@@ -277,10 +307,11 @@ input[type="file"] { display: none; }
 
 <div class="toast" id="toast"></div>
 
+<script src="/admin/image-resize.js"></script>
 <script>
 let products = [];
 let editingId = null;
-let pendingImageKey = null;
+let pendingImageKeys = [null, null, null];
 
 async function logout() {
   await fetch('/api/admin/logout', { method: 'POST' });
@@ -342,15 +373,35 @@ function escapeHtml(s) {
   }[c]));
 }
 
+function slotEl(i) { return document.querySelector(`.photo-slot[data-slot="${i}"]`); }
+
+function renderSlot(i) {
+  const slot = slotEl(i);
+  const key = pendingImageKeys[i];
+  const preview = slot.querySelector('.image-preview');
+  const noImage = slot.querySelector('.no-image-text');
+  const removeBtn = slot.querySelector('.remove-photo-btn');
+  if (key) {
+    preview.src = '/images/' + key;
+    preview.style.display = 'block';
+    noImage.style.display = 'none';
+    removeBtn.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+    noImage.style.display = 'block';
+    removeBtn.style.display = 'none';
+  }
+}
+
+function renderAllSlots() { for (let i = 0; i < 3; i++) renderSlot(i); }
+
 function openCreateModal() {
   editingId = null;
-  pendingImageKey = null;
+  pendingImageKeys = [null, null, null];
   document.getElementById('modalTitle').textContent = 'New Product';
   document.getElementById('productForm').reset();
   document.getElementById('productId').value = '';
-  document.getElementById('productImageKey').value = '';
-  document.getElementById('imagePreview').style.display = 'none';
-  document.getElementById('noImageText').style.display = 'block';
+  renderAllSlots();
   document.getElementById('deleteBtn').style.display = 'none';
   document.getElementById('sortOrder').value = (Math.max(0, ...products.map(p => p.sort_order)) + 1);
   document.getElementById('modalOverlay').classList.add('open');
@@ -360,24 +411,16 @@ function openEditModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   editingId = id;
-  pendingImageKey = p.image_key;
+  pendingImageKeys = [p.image_key || null, p.image_key_2 || null, p.image_key_3 || null];
   document.getElementById('modalTitle').textContent = 'Edit Product';
   document.getElementById('productId').value = id;
-  document.getElementById('productImageKey').value = p.image_key || '';
   document.getElementById('name').value = p.name;
   document.getElementById('description').value = p.description || '';
   document.getElementById('price').value = (p.price_cents / 100).toFixed(2);
   document.getElementById('sortOrder').value = p.sort_order;
   document.getElementById('tag').value = p.tag || '';
   document.getElementById('soldOut').checked = p.sold_out === 1;
-  if (p.image_key) {
-    document.getElementById('imagePreview').src = '/images/' + p.image_key;
-    document.getElementById('imagePreview').style.display = 'block';
-    document.getElementById('noImageText').style.display = 'none';
-  } else {
-    document.getElementById('imagePreview').style.display = 'none';
-    document.getElementById('noImageText').style.display = 'block';
-  }
+  renderAllSlots();
   document.getElementById('deleteBtn').style.display = 'inline-block';
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -386,34 +429,42 @@ function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
-document.getElementById('imageFile').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    toast('Image must be 5 MB or smaller', true);
+for (let i = 0; i < 3; i++) {
+  const input = document.getElementById('imageFile' + i);
+  input.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast('Image must be 5 MB or smaller', true);
+      e.target.value = '';
+      return;
+    }
+    const slot = slotEl(i);
+    const label = slot.querySelector('.upload-label');
+    const originalLabel = label.textContent;
+    label.textContent = 'Resizing…';
+    try {
+      const resized = await resizeImageFile(file);
+      label.textContent = 'Uploading…';
+      const fd = new FormData();
+      fd.append('file', resized);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      pendingImageKeys[i] = data.key;
+      renderSlot(i);
+      toast('Photo uploaded');
+    } catch (err) {
+      toast(err.message, true);
+    }
+    label.textContent = originalLabel;
     e.target.value = '';
-    return;
-  }
-  const btn = document.getElementById('uploadBtn');
-  btn.textContent = 'Uploading…';
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Upload failed');
-    pendingImageKey = data.key;
-    document.getElementById('productImageKey').value = data.key;
-    document.getElementById('imagePreview').src = data.url;
-    document.getElementById('imagePreview').style.display = 'block';
-    document.getElementById('noImageText').style.display = 'none';
-    toast('Photo uploaded');
-  } catch (err) {
-    toast(err.message, true);
-  }
-  btn.textContent = 'Choose photo';
-  e.target.value = '';
-});
+  });
+  slotEl(i).querySelector('.remove-photo-btn').addEventListener('click', () => {
+    pendingImageKeys[i] = null;
+    renderSlot(i);
+  });
+}
 
 document.getElementById('productForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -426,7 +477,9 @@ document.getElementById('productForm').addEventListener('submit', async (e) => {
     description: document.getElementById('description').value.trim(),
     price_cents: Math.round(parseFloat(document.getElementById('price').value) * 100),
     tag: document.getElementById('tag').value || null,
-    image_key: document.getElementById('productImageKey').value || null,
+    image_key: pendingImageKeys[0] || null,
+    image_key_2: pendingImageKeys[1] || null,
+    image_key_3: pendingImageKeys[2] || null,
     sold_out: document.getElementById('soldOut').checked,
     sort_order: parseInt(document.getElementById('sortOrder').value, 10) || 999,
   };

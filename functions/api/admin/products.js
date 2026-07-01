@@ -15,7 +15,7 @@ async function requireAuth(request, env) {
 export async function onRequestGet({ request, env }) {
   if (!(await requireAuth(request, env))) return new Response('Unauthorized', { status: 401 });
   const { results } = await env.DB.prepare(
-    `SELECT id, name, description, price_cents, tag, image_key, sold_out, sort_order
+    `SELECT id, name, description, price_cents, tag, image_key, image_key_2, image_key_3, sold_out, sort_order
      FROM products
      ORDER BY sort_order ASC, id ASC`
   ).all();
@@ -26,19 +26,21 @@ export async function onRequestPost({ request, env }) {
   if (!(await requireAuth(request, env))) return new Response('Unauthorized', { status: 401 });
   try {
     const body = await request.json();
-    const { name, description, price_cents, tag, image_key, sold_out, sort_order } = body;
+    const { name, description, price_cents, tag, image_key, image_key_2, image_key_3, sold_out, sort_order } = body;
     if (!name || typeof price_cents !== 'number' || price_cents < 0) {
       return Response.json({ error: 'Name and a valid price are required' }, { status: 400 });
     }
     const result = await env.DB.prepare(
-      `INSERT INTO products (name, description, price_cents, tag, image_key, sold_out, sort_order)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO products (name, description, price_cents, tag, image_key, image_key_2, image_key_3, sold_out, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       name.trim(),
       (description || '').trim(),
       Math.round(price_cents),
       tag ? tag.trim() : null,
       image_key || null,
+      image_key_2 || null,
+      image_key_3 || null,
       sold_out ? 1 : 0,
       Number.isFinite(sort_order) ? sort_order : 999,
     ).run();

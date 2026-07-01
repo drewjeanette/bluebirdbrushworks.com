@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS products (
   price_cents INTEGER NOT NULL,
   tag TEXT,
   image_key TEXT,
+  image_key_2 TEXT,
+  image_key_3 TEXT,
   sold_out INTEGER NOT NULL DEFAULT 0,
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL DEFAULT (unixepoch())
