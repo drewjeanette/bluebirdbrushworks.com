@@ -948,7 +948,7 @@ function placeholderArt() {
 }
 
 function getArt(p) {
-  if (p.image) return `<img src="${p.image}" alt="${escapeAttr(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"/>`;
+  if (p.image) return `<img src="${p.image}" alt="${escapeAttr(p.name)}" loading="lazy" style="width:100%;height:100%;object-fit:contain;"/>`;
   return placeholderArt();
 }
 
